@@ -14,10 +14,6 @@ class TournamentType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('createdAt', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('creationDate')
             ->add('tournamentDate')
             ->add('participantNumber')
             ->add('address')
