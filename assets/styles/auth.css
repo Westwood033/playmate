@@ -1,0 +1,236 @@
+/* ===========================
+   auth.css — Playmate Auth Pages
+   =========================== */
+
+/* Reset global */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
+/* Layout principal */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f4f8;
+  padding: 2rem 1rem;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 460px;
+}
+
+/* Carte */
+.auth-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem 2rem;
+}
+
+/* Logo / en-tête */
+.auth-logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-logo h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #5b4fcf;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.5px;
+}
+
+.auth-logo p {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Alertes */
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.alert-danger {
+  background-color: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* Formulaire */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* Symfony wrap chaque champ dans un <div> — on neutralise tout margin/padding parasite */
+.auth-form > div,
+.auth-form .form-group > div {
+  margin: 0;
+  padding: 0;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 0;
+}
+
+/* Tous les inputs texte/email/password générés par Symfony */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 0.6rem 0.875rem;
+  font-size: 0.95rem;
+  color: #111827;
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+  box-sizing: border-box;
+  margin: 0;
+  /* Reset des styles navigateur qui causent des barres blanches */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+  border-color: #7c6fe0;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(124, 111, 224, 0.15);
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+}
+
+/* Erreurs de champ */
+.form-group .form-error,
+.form-group ul,
+.form-group ul li {
+  font-size: 0.8rem;
+  color: #b91c1c;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Case à cocher CGU */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.form-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #5b4fcf;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.form-check label {
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+/* Se souvenir de moi */
+.remember-me {
+  margin: 0.25rem 0 0.75rem;
+}
+
+/* Bouton de soumission */
+.btn-auth {
+  margin-top: 0.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #5b4fcf;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+}
+
+.btn-auth:hover {
+  background-color: #4a3fb8;
+}
+
+.btn-auth:active {
+  background-color: #3d33a0;
+  transform: scale(0.99);
+}
+
+/* Pied de carte */
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.auth-footer p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.auth-footer a {
+  color: #5b4fcf;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive mobile */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 2rem 1.25rem;
+    border-radius: 12px;
+  }
+
+  .auth-logo h1 {
+    font-size: 1.75rem;
+  }
+}
