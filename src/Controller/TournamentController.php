@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Tournament;
 use App\Form\TournamentType;
 use App\Repository\TournamentRepository;
-use DateTime;
-use DateTimeImmutable;
+use App\Entity\User;
+use Datetime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +21,15 @@ final class TournamentController extends AbstractController
     {
         return $this->render('tournament/index.html.twig', [
             'tournaments' => $tournamentRepository->findAll(),
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_tournament_list', methods: ['GET'])]
+    public function list(User $user): Response
+    {
+        
+        return $this->render('tournament/index.html.twig', [
+            //'tournaments' => $user->getTournaments,
         ]);
     }
 
