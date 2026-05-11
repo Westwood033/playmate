@@ -82,6 +82,7 @@ final class TournamentController extends AbstractController
 
         return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
     }
+    
      #[Route('/{id}/user/{userId}', name: 'app_tournament_user_add', methods: ['POST'])]
       public function addUser(Request $request, Tournament $tournament, EntityManagerInterface $entityManager): Response
     {
