@@ -1,0 +1,11 @@
+{% set colors = {
+    'Administrateur': 'danger',
+    'Utilisateur': 'primary',
+    'Boutique': 'secondary',
+} %}
+
+{% for label in field.formattedValue %}
+    <span class="badge badge-{{ colors[label] ?? 'secondary' }}">
+        {{ label }}
+    </span>
+{% endfor %}
