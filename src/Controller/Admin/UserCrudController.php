@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -38,6 +39,9 @@ class UserCrudController extends AbstractCrudController
             TextField::new('email', 'Email'),
             TextField::new('firstname', 'Prénom'),
             TextField::new('lastname', 'Nom'),
+            TextField::new('password', 'Mot de passe')
+                ->setFormType(PasswordType::class)
+                ->onlyOnForms(),
             ChoiceField::new('roles', 'Rôles')
                 ->setChoices([
                     'Administrateur' => 'ROLE_ADMIN',
