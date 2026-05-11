@@ -23,9 +23,6 @@ class Tournament
     private ?string $description = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
-
-    #[ORM\Column]
     private ?\DateTime $creationDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -77,17 +74,6 @@ class Tournament
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
 
     public function getCreationDate(): ?\DateTime
     {

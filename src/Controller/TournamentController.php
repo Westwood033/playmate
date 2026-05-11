@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Tournament;
 use App\Form\TournamentType;
 use App\Repository\TournamentRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,6 +33,7 @@ final class TournamentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $tournament->setCreationDate(New DateTime());
             $entityManager->persist($tournament);
             $entityManager->flush();
 
