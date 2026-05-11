@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Command;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +32,8 @@ class InitData extends Command
         $admin = new User();
         $admin->setUsername('admin');
         $admin->setEmail('admin@test.fr');
+        $admin->setFirstname("Admin");
+        $admin->setLastname("ADMIN");
         $admin->setRoles(['ROLE_ADMIN']);
 
         $hashedPassword = $this->passwordHasher->hashPassword($admin, 'admin');
