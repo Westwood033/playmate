@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\User;
 
 #[Route('/tournament')]
 final class TournamentController extends AbstractController
@@ -87,6 +88,21 @@ final class TournamentController extends AbstractController
             $entityManager->remove($tournament);
             $entityManager->flush();
         }
+
+        return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
+    }
+    
+     #[Route('/{id}/user/{userId}', name: 'app_tournament_user_add', methods: ['POST'])]
+      public function addUser(Request $request, Tournament $tournament, EntityManagerInterface $entityManager): Response
+    {
+        $userId = $request->get('userId');
+        $user = $entityManager->getRepository(User::class)->find($userId);
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        $tournament->addUser($user);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
     }
