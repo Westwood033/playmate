@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/item.css') }}">
+{% endblock %}
+
+{% block title %}{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }} — Playmate{% endblock %}
+
+{% block body %}
+<div class="item-form-page">
+
+    <div class="item-form-container">
+        <div class="item-form-card">
+
+            <div class="item-form-header">
+                <a href="{{ path('item_index') }}" class="item-form-back">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 5l-7 7 7 7"/>
+                    </svg>
+                    Retour aux articles
+                </a>
+                <h1>{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }}</h1>
+                <p>{{ editing is defined and editing ? 'Mettez à jour les informations de votre annonce.' : 'Remplissez les informations pour mettre en vente votre article.' }}</p>
+            </div>
+
+            {% for msg in app.flashes('success') %}
+                <div class="alert alert-success">{{ msg }}</div>
+            {% endfor %}
+
+            {{ form_start(form, {attr: {class: 'item-form', novalidate: 'novalidate'}}) }}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                        {{ form_errors(form.name) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.price) }}
+                        <div class="input-money-wrap">
+                            {{ form_widget(form.price) }}
+                        </div>
+                        {{ form_errors(form.price) }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form_label(form.category) }}
+                        {{ form_widget(form.category) }}
+                        {{ form_errors(form.category) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.condition) }}
+                        {{ form_widget(form.condition) }}
+                        {{ form_errors(form.condition) }}
+                    </div>
+                </div>
+
+                <div class="form-group form-group--full">
+                    {{ form_label(form.description) }}
+                    {{ form_widget(form.description) }}
+                    {{ form_errors(form.description) }}
+                </div>
+
+                <button type="submit" class="btn-item-submit">
+                    {{ editing is defined and editing ? 'Enregistrer les modifications' : 'Publier l\'article' }}
+                </button>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
