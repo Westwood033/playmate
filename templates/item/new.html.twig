@@ -2,7 +2,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/item.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/item.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/upload-widget.css') }}">
 {% endblock %}
 
 {% block title %}{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }} — Playmate{% endblock %}
@@ -28,8 +29,9 @@
                 <div class="alert alert-success">{{ msg }}</div>
             {% endfor %}
 
-            {{ form_start(form, {attr: {class: 'item-form', novalidate: 'novalidate'}}) }}
+            {{ form_start(form, {attr: {class: 'item-form', novalidate: 'novalidate', enctype: 'multipart/form-data'}}) }}
 
+                {# ── Nom + Prix ── #}
                 <div class="form-row">
                     <div class="form-group">
                         {{ form_label(form.name) }}
@@ -46,6 +48,7 @@
                     </div>
                 </div>
 
+                {# ── Catégorie + État ── #}
                 <div class="form-row">
                     <div class="form-group">
                         {{ form_label(form.category) }}
@@ -60,10 +63,68 @@
                     </div>
                 </div>
 
+                {# ── Description ── #}
                 <div class="form-group form-group--full">
                     {{ form_label(form.description) }}
                     {{ form_widget(form.description) }}
                     {{ form_errors(form.description) }}
+                </div>
+
+                {# ── Upload photos ── #}
+                <div class="upload-field form-group--full">
+                    <label>
+                        Photos
+                        <span class="upload-count" id="upload-count"></span>
+                    </label>
+
+                    {# Input Symfony — caché via CSS, piloté par le JS #}
+                    {{ form_widget(form.imageFiles, {
+                        attr: { multiple: 'multiple', accept: 'image/jpeg,image/png,image/webp' }
+                    }) }}
+                    {{ form_errors(form.imageFiles) }}
+
+                    {# Zone de dépôt #}
+                    <div class="upload-drop-zone" id="upload-drop-zone"
+                         role="button" tabindex="0" aria-label="Zone de dépôt d'images">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <p class="upload-drop-zone__text">
+                            Glissez vos photos ici ou <u>parcourir</u>
+                        </p>
+                        <p class="upload-drop-zone__hint">JPG, PNG, WEBP · max 5 Mo · jusqu'à 8 photos</p>
+                    </div>
+
+                    {# Grille de miniatures (remplie par JS pour les nouveaux fichiers) #}
+                    <div class="upload-preview-grid" id="upload-preview-grid">
+
+                        {# En mode édition : images déjà sauvegardées #}
+                        {% if editing is defined and editing and item.images|length > 0 %}
+                            {% for img in item.images %}
+                                <div class="upload-thumb upload-thumb--existing {% if loop.first %}upload-thumb--cover{% endif %}"
+                                     draggable="true"
+                                     data-filename="{{ img }}">
+                                    <img src="{{ asset('uploads/items/' ~ img) }}" alt="Photo {{ loop.index }}">
+                                    <button type="button" class="upload-thumb__remove" title="Supprimer">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M18 6 6 18M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                    <span class="upload-thumb__cover">Couverture</span>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                    </div>
+
+                    {# Ordre des images existantes transmis au controller (mode édition) #}
+                    {% if editing is defined and editing %}
+                        <input type="hidden" name="existing_images_order"
+                               id="existing-images-order"
+                               value="{{ item.images|json_encode }}">
+                    {% endif %}
                 </div>
 
                 <button type="submit" class="btn-item-submit">
@@ -76,4 +137,82 @@
     </div>
 
 </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/image-upload.js') }}" defer></script>
+
+    {% if editing is defined and editing %}
+    <script>
+    // Gestion des images existantes en mode édition (réordonnement + suppression)
+    document.addEventListener('DOMContentLoaded', () => {
+        const orderInput = document.getElementById('existing-images-order');
+        const grid       = document.getElementById('upload-preview-grid');
+        if (!grid || !orderInput) return;
+
+        let existingOrder = JSON.parse(orderInput.value || '[]');
+
+        function syncOrder() {
+            orderInput.value = JSON.stringify(existingOrder);
+        }
+
+        function refreshCover() {
+            grid.querySelectorAll('.upload-thumb').forEach((t, i) =>
+                t.classList.toggle('upload-thumb--cover', i === 0)
+            );
+        }
+
+        grid.querySelectorAll('.upload-thumb--existing').forEach(thumb => {
+            // Suppression
+            thumb.querySelector('.upload-thumb__remove')?.addEventListener('click', () => {
+                existingOrder = existingOrder.filter(f => f !== thumb.dataset.filename);
+                syncOrder();
+                thumb.remove();
+                refreshCover();
+            });
+
+            // Drag
+            thumb.addEventListener('dragstart', e => {
+                e.dataTransfer.setData('text/plain', thumb.dataset.filename);
+                thumb.classList.add('upload-thumb--dragging');
+            });
+            thumb.addEventListener('dragover', e => {
+                e.preventDefault();
+                thumb.classList.add('upload-thumb--dragover');
+            });
+            thumb.addEventListener('dragleave', () => {
+                thumb.classList.remove('upload-thumb--dragover');
+            });
+            thumb.addEventListener('drop', e => {
+                e.preventDefault();
+                thumb.classList.remove('upload-thumb--dragover');
+
+                const src  = e.dataTransfer.getData('text/plain');
+                const dest = thumb.dataset.filename;
+                if (src === dest) return;
+
+                const si = existingOrder.indexOf(src);
+                const di = existingOrder.indexOf(dest);
+                existingOrder.splice(si, 1);
+                existingOrder.splice(di, 0, src);
+                syncOrder();
+
+                const thumbs   = [...grid.querySelectorAll('.upload-thumb--existing')];
+                const srcThumb = thumbs.find(t => t.dataset.filename === src);
+                if (si < di) thumb.after(srcThumb);
+                else thumb.before(srcThumb);
+
+                refreshCover();
+            });
+            thumb.addEventListener('dragend', () => {
+                thumb.classList.remove('upload-thumb--dragging');
+                grid.querySelectorAll('.upload-thumb').forEach(t =>
+                    t.classList.remove('upload-thumb--dragover')
+                );
+            });
+        });
+    });
+    </script>
+    {% endif %}
 {% endblock %}

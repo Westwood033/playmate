@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/item.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/item.css') }}">
 {% endblock %}
 
 {% block title %}Articles — Playmate{% endblock %}
@@ -42,13 +42,10 @@
         <select name="category" class="search-bar__select">
             <option value="">Toutes catégories</option>
             {% for label, val in {
-                'Électronique':  'electronique',
-                'Vêtements':     'vetements',
-                'Maison':        'maison',
-                'Sport':         'sport',
-                'Jeux & Jouets': 'jeux',
-                'Livres':        'livres',
-                'Autre':         'autre'
+                'Carte': 'carte',
+                'Booster': 'booster',
+                'Display': 'display',
+                'Autre': 'autre'
             } %}
                 <option value="{{ val }}" {% if filters.category == val %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
@@ -61,7 +58,6 @@
                 'Très bon état': 'tres_bon',
                 'Bon état':      'bon',
                 'État correct':  'correct',
-                'Pour pièces':   'pieces'
             } %}
                 <option value="{{ val }}" {% if filters.condition == val %}selected{% endif %}>{{ label }}</option>
             {% endfor %}
@@ -80,12 +76,10 @@
         {% endif %}
     </form>
 
-    {# ── Flash messages ── #}
     {% for msg in app.flashes('success') %}
         <div class="alert alert-success">{{ msg }}</div>
     {% endfor %}
 
-    {# ── Grille ── #}
     {% if items is empty %}
         <div class="items-empty">
             <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -99,10 +93,9 @@
         <div class="items-grid">
             {% for item in items %}
                 <a href="{{ path('item_show', {id: item.id}) }}" class="item-card {% if item.sold %}item-card--sold{% endif %}">
-
                     <div class="item-card__image">
                         {% if item.images|length > 0 %}
-                            <img src="{{ item.images[0] }}" alt="{{ item.name }}">
+                            <img src="{{ asset('uploads/items/' ~ item.images[0]) }}" alt="{{ item.name }}">
                         {% else %}
                             <div class="item-card__image-placeholder">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

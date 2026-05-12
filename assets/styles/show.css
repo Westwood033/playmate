@@ -1,0 +1,385 @@
+/* ────────────────────────────────────────────
+   PAGE SHOW — détail d'un article
+   À ajouter à la fin de item.css
+──────────────────────────────────────────── */
+
+.show-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── Fil d'Ariane ── */
+.show-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.show-breadcrumb a {
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.show-breadcrumb a:hover {
+  color: #5b4fcf;
+}
+
+.show-breadcrumb__current {
+  color: #374151;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+/* ── Layout deux colonnes ── */
+.show-layout {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 3rem;
+  align-items: start;
+}
+
+/* ════════════════════════════════════════════
+   GALERIE
+════════════════════════════════════════════ */
+
+.show-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: sticky;
+  top: 1.5rem;
+}
+
+/* Image principale */
+.show-gallery__main {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+}
+
+.show-gallery__main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+/* Overlay "Vendu" */
+.show-gallery__sold-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Placeholder sans photo */
+.show-gallery__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: #9ca3af;
+}
+
+.show-gallery__placeholder svg {
+  width: 48px;
+  height: 48px;
+  color: #d1d5db;
+}
+
+.show-gallery__placeholder p {
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Bande de miniatures */
+.show-gallery__thumbs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.show-gallery__thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.15s, opacity 0.15s;
+  opacity: 0.65;
+}
+
+.show-gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.show-gallery__thumb:hover {
+  opacity: 0.85;
+  border-color: #c4b5fd;
+}
+
+.show-gallery__thumb--active {
+  border-color: #5b4fcf;
+  opacity: 1;
+}
+
+/* ════════════════════════════════════════════
+   INFOS
+════════════════════════════════════════════ */
+
+.show-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* Badges */
+.show-info__badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge--category {
+  background: #ede9fe;
+  color: #5b4fcf;
+}
+
+.badge--condition {
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.badge--sold {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+/* Titre */
+.show-info__title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #111827;
+  letter-spacing: -0.4px;
+  margin: 0;
+  line-height: 1.25;
+}
+
+/* Prix */
+.show-info__price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #5b4fcf;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+/* Description */
+.show-info__description h2 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin: 0 0 0.5rem;
+}
+
+.show-info__description p {
+  font-size: 0.95rem;
+  color: #374151;
+  line-height: 1.65;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Séparateur */
+.show-info__sep {
+  border: none;
+  border-top: 1px solid #f3f4f6;
+  margin: 0;
+}
+
+/* Vendeur */
+.show-info__seller {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.show-info__seller-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c6fe0, #5b4fcf);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.show-info__seller-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.show-info__seller-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+.show-info__seller-since {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Date */
+.show-info__date {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* ── Boutons d'action ── */
+.show-info__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.btn-contact {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background-color: #5b4fcf;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-contact svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.btn-contact:hover {
+  background-color: #4a3fb8;
+}
+
+.btn-contact:active {
+  transform: scale(0.99);
+}
+
+/* Actions propriétaire */
+.show-info__owner-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.btn-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+  flex: 1;
+  justify-content: center;
+}
+
+.btn-edit svg {
+  width: 15px;
+  height: 15px;
+}
+
+.btn-edit:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .show-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .show-gallery {
+    position: static;
+  }
+}
+
+@media (max-width: 480px) {
+  .show-gallery__thumb {
+    width: 56px;
+    height: 56px;
+  }
+
+  .show-info__title {
+    font-size: 1.3rem;
+  }
+
+  .show-info__price {
+    font-size: 1.6rem;
+  }
+}

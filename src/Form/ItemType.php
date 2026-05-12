@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Item;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -61,7 +62,14 @@ class ItemType extends AbstractType
                     'placeholder' => 'Décrivez votre article : état, taille, défauts éventuels…',
                     'rows' => 5,
                 ],
-            ]);
+            ])
+            ->add('imageFiles', FileType::class, [
+                'label'    => false,
+                'mapped'   => false,
+                'required' => false,
+                'multiple' => true,
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
