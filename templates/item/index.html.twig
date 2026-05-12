@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/item.css') }}">
+{% endblock %}
+
+{% block title %}Articles — Playmate{% endblock %}
+
+{% block body %}
+<div class="items-page">
+
+    {# ── En-tête ── #}
+    <div class="items-header">
+        <div class="items-header__text">
+            <h1>Articles</h1>
+            <p>{{ items|length }} résultat{{ items|length != 1 ? 's' : '' }}</p>
+        </div>
+        {% if is_granted('ROLE_USER') %}
+            <a href="{{ path('item_new') }}" class="btn-publish">
+                <span class="btn-publish__icon">+</span>
+                Publier un article
+            </a>
+        {% endif %}
+    </div>
+
+    {# ── Barre de recherche & filtres ── #}
+    <form class="search-bar" method="GET" action="{{ path('item_index') }}">
+        <div class="search-bar__input-wrap">
+            <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input
+                type="text"
+                name="q"
+                value="{{ filters.q }}"
+                placeholder="Rechercher un article…"
+                class="search-bar__input"
+            >
+        </div>
+
+        <select name="category" class="search-bar__select">
+            <option value="">Toutes catégories</option>
+            {% for label, val in {
+                'Carte': 'carte',
+                'Booster': 'booster',
+                'Display': 'display',
+                'Autre': 'autre'
+            } %}
+                <option value="{{ val }}" {% if filters.category == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="condition" class="search-bar__select">
+            <option value="">Tous états</option>
+            {% for label, val in {
+                'Neuf':          'neuf',
+                'Très bon état': 'tres_bon',
+                'Bon état':      'bon',
+                'État correct':  'correct',
+            } %}
+                <option value="{{ val }}" {% if filters.condition == val %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+
+        <select name="sold" class="search-bar__select">
+            <option value="" {% if filters.sold == '' %}selected{% endif %}>Tous</option>
+            <option value="0"  {% if filters.sold == '0' %}selected{% endif %}>Disponibles</option>
+            <option value="1"  {% if filters.sold == '1' %}selected{% endif %}>Vendus</option>
+        </select>
+
+        <button type="submit" class="search-bar__btn">Filtrer</button>
+
+        {% if filters.q or filters.category or filters.condition or filters.sold != '' %}
+            <a href="{{ path('item_index') }}" class="search-bar__reset">✕ Réinitialiser</a>
+        {% endif %}
+    </form>
+
+    {% for msg in app.flashes('success') %}
+        <div class="alert alert-success">{{ msg }}</div>
+    {% endfor %}
+
+    {% if items is empty %}
+        <div class="items-empty">
+            <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="8" y="16" width="48" height="36" rx="4"/>
+                <path d="M8 24h48M24 16v-4a8 8 0 0 1 16 0v4"/>
+            </svg>
+            <p>Aucun article trouvé.</p>
+            <a href="{{ path('item_index') }}">Voir tous les articles</a>
+        </div>
+    {% else %}
+        <div class="items-grid">
+            {% for item in items %}
+                <a href="{{ path('item_show', {id: item.id}) }}" class="item-card {% if item.sold %}item-card--sold{% endif %}">
+                    <div class="item-card__image">
+                        {% if item.images|length > 0 %}
+                            <img src="{{ asset('uploads/items/' ~ item.images[0]) }}" alt="{{ item.name }}">
+                        {% else %}
+                            <div class="item-card__image-placeholder">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <path d="m21 15-5-5L5 21"/>
+                                </svg>
+                            </div>
+                        {% endif %}
+
+                        {% if item.sold %}
+                            <span class="item-card__badge item-card__badge--sold">Vendu</span>
+                        {% elseif item.condition %}
+                            {% set condLabels = {
+                                'neuf':     'Neuf',
+                                'tres_bon': 'Très bon',
+                                'bon':      'Bon état',
+                                'correct':  'Correct',
+                                'pieces':   'Pièces'
+                            } %}
+                            <span class="item-card__badge">{{ condLabels[item.condition] ?? item.condition }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="item-card__body">
+                        <p class="item-card__category">{{ item.category ?? 'Autre' }}</p>
+                        <h2 class="item-card__name">{{ item.name }}</h2>
+                        <p class="item-card__price">{{ item.price|number_format(2, ',', ' ') }} €</p>
+                        <div class="item-card__meta">
+                            <span class="item-card__owner">{{ item.owner.username ?? 'Anonyme' }}</span>
+                            <span class="item-card__date">{{ item.createdAt|date('d/m/Y') }}</span>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}
