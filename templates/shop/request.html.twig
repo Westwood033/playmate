@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demande Boutique{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+{% endblock %}
+
+{% block body %}
+<main class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+
+            <div class="auth-logo">
+                <h1>Playmate</h1>
+                <p>Demande de compte boutique</p>
+            </div>
+
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {{ form_errors(form) }}
+
+            {{ form_start(form, {'attr': {'class': 'auth-form'}}) }}
+
+                <div class="form-group">
+                    {{ form_label(form.username) }}
+                    {{ form_widget(form.username, {
+                        'attr': {
+                            'class': 'form-input',
+                            'placeholder': 'Nom de votre boutique'
+                        }
+                    }) }}
+                    {{ form_errors(form.username) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.shopAddress) }}
+                    {{ form_widget(form.shopAddress, {
+                        'attr': {
+                            'class': 'form-input',
+                            'placeholder': 'Adresse complète'
+                        }
+                    }) }}
+                    {{ form_errors(form.shopAddress) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.phone) }}
+                    {{ form_widget(form.phone, {
+                        'attr': {
+                            'class': 'form-input',
+                            'placeholder': '06 00 00 00 00'
+                        }
+                    }) }}
+                    {{ form_errors(form.phone) }}
+                </div>
+
+                <button type="submit" class="btn-auth">
+                    Envoyer la demande
+                </button>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+</main>
+{% endblock %}
