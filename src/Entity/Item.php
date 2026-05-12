@@ -43,6 +43,9 @@ class Item
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
+    #[ORM\OneToOne(mappedBy: 'item', cascade: ['persist', 'remove'])]
+    private ?Transaction $transaction = null;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
@@ -150,6 +153,23 @@ class Item
     public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
+        return $this;
+    }
+
+    public function getTransaction(): ?Transaction
+    {
+        return $this->transaction;
+    }
+
+    public function setTransaction(Transaction $transaction): static
+    {
+        // set the owning side of the relation if necessary
+        if ($transaction->getItem() !== $this) {
+            $transaction->setItem($this);
+        }
+
+        $this->transaction = $transaction;
+
         return $this;
     }
 }

@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/item.css') }}">
+{% endblock %}
+
+{% block title %}{{ editing is defined and editing ? 'blablabla' : 'bebleblze' }} — Playmate{% endblock %}
+
+{% block body %}
+<div class="transaction-form-page">
+
+    <div class="transaction-form-container">
+        <div class="transaction-form-card">
+
+            <div class="transaction-form-header">
+                <a href="{{ path('item_index') }}" class="transaction-form-back">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 5l-7 7 7 7"/>
+                    </svg>
+                    Retour aux articles
+                </a>
+                <h1>{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }}</h1>
+                <p>{{ editing is defined and editing ? 'Mettez à jour les informations de votre annonce.' : 'Remplissez les informations pour mettre en vente votre article.' }}</p>
+            </div>
+
+            {% for msg in app.flashes('success') %}
+                <div class="alert alert-success">{{ msg }}</div>
+            {% endfor %}
+
+            {{ form_start(form, {attr: {class: 'transaction-form', novalidate: 'novalidate'}}) }}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form_label(form.billingAddress) }}
+                        {{ form_widget(form.billingAddress) }}
+                        {{ form_errors(form.billingAddress) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.sameAddress) }}
+                        {{ form_errors(form.sameAddress) }}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        {{ form_label(form.category) }}
+                        {{ form_widget(form.category) }}
+                        {{ form_errors(form.category) }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-item-submit">
+                    {{ editing is defined and editing ? 'Enregistrer les modifications' : 'Publier l\'article' }}
+                </button>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
