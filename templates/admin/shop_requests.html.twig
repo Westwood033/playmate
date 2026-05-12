@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demandes Boutique{% endblock %}
+
+{% block body %}
+
+<h1>Demandes boutique</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+
+                <a href="{{ path('admin_shop_validate', {'id': user.id}) }}">
+                    Valider
+                </a>
+
+                <a href="{{ path('admin_shop_reject', {'id': user.id}) }}">
+                    Refuser
+                </a>
+
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

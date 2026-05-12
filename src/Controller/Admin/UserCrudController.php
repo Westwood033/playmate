@@ -66,4 +66,17 @@ class UserCrudController extends AbstractCrudController
                 ->onlyOnIndex(),
         ];
     }
+    public function approveShop(AdminContext $context, EntityManagerInterface $em)
+    {
+        $user = $context->getEntity()->getInstance();
+
+        $user->addRole('ROLE_SHOP');
+        $user->setShopRequest(false);
+
+        $em->flush();
+
+        $this->addFlash('success', 'Boutique validée');
+
+        return $this->redirect($this->generateUrl('admin'));
+   }
 }
