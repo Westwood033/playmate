@@ -40,6 +40,10 @@ class Tournament
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'tournaments')]
     private Collection $users;
 
+    #[ORM\ManyToOne(inversedBy: 'tournamentsCreated')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $owner = null;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -143,6 +147,18 @@ class Tournament
     public function removeUser(User $user): static
     {
         $this->users->removeElement($user);
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
 
         return $this;
     }

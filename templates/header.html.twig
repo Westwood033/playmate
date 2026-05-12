@@ -24,8 +24,8 @@
             {% else %}
             <div class="nav nav-pills mx-2 mt-2">
                 {# {{ path('#',{id:app.user.id}) }} #}
-                    <a href="#" class=" without-line {% if app.request.getPathInfo() starts with path('app_home', {id: app.user.id}) %} title text-decoration-underline {% else %}text-body{% endif %}">
-                        Tournois disponible
+                    <a href="{{ path('app_tournament_new',{id:app.user.id}) }}" class=" without-line {% if app.request.getPathInfo() starts with path('app_tournament_new', {id: app.user.id}) %} title text-decoration-underline {% else %}text-body{% endif %}">
+                        Créer un tournoi
                     </a>
                 </div>
             {% endif %}

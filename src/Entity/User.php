@@ -64,10 +64,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Tournament::class, mappedBy: 'users')]
     private Collection $tournaments;
 
+    /**
+     * @var Collection<int, Tournament>
+     */
+    #[ORM\OneToMany(targetEntity: Tournament::class, mappedBy: 'owner')]
+    private Collection $tournamentsCreated;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
         $this->tournaments = new ArrayCollection();
+        $this->tournamentsCreated = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -242,6 +249,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->tournaments->removeElement($tournament)) {
             $tournament->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tournament>
+     */
+    public function getTournamentsCreated(): Collection
+    {
+        return $this->tournamentsCreated;
+    }
+
+    public function addTournamentsCreated(Tournament $tournamentsCreated): static
+    {
+        if (!$this->tournamentsCreated->contains($tournamentsCreated)) {
+            $this->tournamentsCreated->add($tournamentsCreated);
+            $tournamentsCreated->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTournamentsCreated(Tournament $tournamentsCreated): static
+    {
+        if ($this->tournamentsCreated->removeElement($tournamentsCreated)) {
+            // set the owning side to null (unless already changed)
+            if ($tournamentsCreated->getOwner() === $this) {
+                $tournamentsCreated->setOwner(null);
+            }
         }
 
         return $this;

@@ -5,11 +5,10 @@ namespace App\Controller;
 use App\Entity\Tournament;
 use App\Form\TournamentType;
 use App\Repository\TournamentRepository;
-use App\Entity\User;
-use Datetime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Datetime;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\User;
@@ -34,8 +33,8 @@ final class TournamentController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_tournament_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{id}', name: 'app_tournament_new', methods: ['GET', 'POST'])]
+    public function new(User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
         $tournament = new Tournament();
         $form = $this->createForm(TournamentType::class, $tournament);
@@ -43,6 +42,7 @@ final class TournamentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $tournament->setCreationDate(New DateTime());
+            $tournament->setOwner($user);
             $entityManager->persist($tournament);
             $entityManager->flush();
 
