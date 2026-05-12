@@ -11,6 +11,19 @@
   padding: 0;
 }
 
+textarea {
+  resize: none;
+}
+
+.location-row {
+  display: flex;
+  gap: 12px;
+}
+
+.location-row input {
+  flex: 1;
+}
+
 html,
 body {
   width: 100%;
@@ -92,6 +105,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  background-color: white;
 }
 
 .form-group label {

@@ -1,4 +1,122 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Tournoi
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+{% endblock %}
+
+{% block body %}
+	<main class="auth-page">
+		<div class="auth-container">
+			<div class="auth-card">
+				<div class="auth-logo">
+					<h1>Playmate</h1>
+					<p>Créez un tournoi</p>
+				</div>
+
+				{% for flash_error in app.flashes('verify_email_error') %}
+					<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+				{% endfor %}
+
+				{{ form_errors(form) }}
+
+				{{ form_start(form, {'attr': {'class': 'auth-form'}}) }}
+				<div class="form-group">
+					{{ form_label(form.name) }}
+					{{ form_widget(form.name, {'attr': {'placeholder': 'ex : Évènement TCC', 'class': 'form-control'}}) }}
+					{{ form_errors(form.name) }}
+				</div>
+
+				<div class="form-group">
+					{{ form_label(form.description) }}
+					{{ form_widget(form.description, {'attr': {'placeholder': 'ex : Échange de carte...', 'class': 'form-control'}}) }}
+					{{ form_errors(form.description) }}
+				</div>
+
+				<div class="form-group">
+					{{ form_label(form.tournamentDate) }}
+					{{ form_widget(form.tournamentDate, {'attr': {'class': 'form-control'}}) }}
+					{{ form_errors(form.tournamentDate) }}
+				</div>
+
+				<div class="form-group">
+					{{ form_label(form.participantNumber) }}
+					{{ form_widget(form.participantNumber, {'attr': {'value': 1, 'class': 'form-control'}}) }}
+					{{ form_errors(form.participantNumber) }}
+				</div>
+
+				<div class="form-group">
+					{{ form_label(form.street) }}
+					{{ form_widget(form.street, {'attr': {'placeholder': 'Adresse', 'class': 'form-control'}}) }}
+					{{ form_errors(form.street) }}
+					<div class="location-row">
+						<div>
+							{{ form_widget(form.postalCode, {
+            'attr': {
+                'placeholder': 'Code Postal',
+                'class': 'form-control',
+            }
+        }) }}
+							{{ form_errors(form.postalCode) }}
+						</div>
+
+						<div>
+							{{ form_widget(form.city, {
+                        'attr': {
+                            'placeholder': 'Ville',
+                            'class': 'form-control',
+                        }
+                    }) }}
+							{{ form_errors(form.city) }}
+						</div>
+
+						<div>
+							{{ form_widget(form.country, {
+                        'attr': {
+                            'placeholder': 'Pays',
+                            'class': 'form-control',
+                        }
+                    }) }}
+							{{ form_errors(form.country) }}
+						</div>
+					</div>
+				</div>
+				<button type="submit" class="btn-auth">Créer</button>
+				{{ form_end(form) }}
+			</div>
+		</div>
+	</main>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const postalCodeInput = document.getElementById('tournament_postalCode');
+    const cityInput = document.getElementById('tournament_city');
+    const countryInput = document.getElementById('tournament_country');
+
+    postalCodeInput.addEventListener('blur', async function () {
+        const postalCode = postalCodeInput.value.trim();
+
+        if (postalCode.length === 5) {
+            try {
+                const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${postalCode}&type=municipality`);
+                const data = await response.json();
+
+                if (data.features.length > 0) {
+                    const city = data.features[0].properties.city || data.features[0].properties.name;
+
+                    cityInput.value = city;
+                    countryInput.value = 'France';
+                }
+            } catch (error) {
+                console.error('Erreur API :', error);
+            }
+        }
+    });
+});
+</script>
+{% endblock %}
