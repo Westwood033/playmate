@@ -1,7 +1,18 @@
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #5b4fcf;
-  margin: 0 0 0.25rem;
-  letter-spacing: -0.5px;
-}
+@import url("./base/reset.css");
+@import url("./base/tokens.css");
+@import url("./base/base.css");
+@import url("./base/typography.css");
+@import url("./base/utilities.css");
+
+@import url("./layout/layout.css");
+@import url("./layout/header.css");
+@import url("./layout/footer.css");
+
+@import url("./components/cards.css");
+@import url("./components/buttons.css");
+@import url("./components/forms.css");
+@import url("./components/alerts.css");
+@import url("./components/carousel.css");
+@import url("./components/calendar.css");
+
+@import url("./pages/home.css");
