@@ -26,7 +26,7 @@ class ItemType extends AbstractType
             ])
             ->add('price', MoneyType::class, [
                 'label' => 'Prix (€)',
-                'currency' => 'EUR',
+                'currency' => false,
                 'attr' => ['placeholder' => '0.00'],
                 'constraints' => [
                     new NotBlank(message: 'Le prix est obligatoire.'),

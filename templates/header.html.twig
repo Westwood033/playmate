@@ -19,7 +19,7 @@
 						</a>
 						<a href="{{ path('app_tournament_index') }}"
 						   class="{{ current_route starts with 'app_tournament' ? 'text-body' : 'text-muted' }}">
-							Mes Tournois
+							Tournois
 						</a>
 					{% else %}
 						<a href="{{ path('app_tournament_new', {id: app.user.id}) }}"
@@ -28,7 +28,7 @@
 						</a>
 						<a href="{{ path('app_tournament_index') }}"
 						   class="{{ current_route == 'app_tournament_index' ? 'text-body' : 'text-muted' }}">
-							Mes Tournois
+							Tournois
 						</a>
 					{% endif %}
 
