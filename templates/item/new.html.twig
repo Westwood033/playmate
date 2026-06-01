@@ -9,6 +9,10 @@
 {% block title %}{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }} — Playmate{% endblock %}
 
 {% block body %}
+{% include 'header.html.twig' %}
+
+<main class="page">
+<div class="container">
 <div class="item-form-page">
 
     <div class="item-form-container">
@@ -137,6 +141,8 @@
     </div>
 
 </div>
+</div>
+</main>
 {% endblock %}
 
 {% block javascripts %}

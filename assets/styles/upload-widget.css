@@ -1,19 +1,17 @@
 /* ────────────────────────────────────────────
-   WIDGET UPLOAD IMAGES
-   À ajouter dans item.css
+   WIDGET UPLOAD IMAGES (dark theme)
 ──────────────────────────────────────────── */
 
-/* Wrapper global */
 .upload-field {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-3);
 }
 
 .upload-field > label {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: #374151;
+  color: #d9c39a;
 }
 
 /* ── Zone de dépôt ── */
@@ -22,62 +20,62 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 2rem 1.5rem;
-  border: 2px dashed #d1d5db;
-  border-radius: 12px;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-5);
+  border: 2px dashed rgba(183, 144, 84, 0.4);
+  border-radius: var(--radius-md);
   cursor: pointer;
   text-align: center;
-  background: #f9fafb;
+  background: rgba(20, 17, 14, 0.55);
   transition: border-color 0.2s, background 0.2s;
   user-select: none;
 }
 
 .upload-drop-zone:hover,
 .upload-drop-zone--active {
-  border-color: #7c6fe0;
-  background: #f5f3ff;
+  border-color: rgba(214, 180, 116, 0.7);
+  background: rgba(29, 24, 19, 0.78);
 }
 
 .upload-drop-zone svg {
   width: 36px;
   height: 36px;
-  color: #a5b4fc;
+  color: rgba(214, 180, 116, 0.5);
   flex-shrink: 0;
 }
 
 .upload-drop-zone__text {
-  font-size: 0.9rem;
-  color: #374151;
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
   margin: 0;
 }
 
 .upload-drop-zone__text u {
-  color: #5b4fcf;
+  color: #f0d7aa;
   cursor: pointer;
 }
 
 .upload-drop-zone__hint {
-  font-size: 0.78rem;
-  color: #9ca3af;
+  font-size: var(--text-xs);
+  color: var(--color-text-soft);
   margin: 0;
 }
 
 /* Compteur de fichiers */
 .upload-count {
-  font-size: 0.8rem;
-  color: #6b7280;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
   text-align: right;
   min-height: 1.1em;
 }
 
 /* Message d'erreur */
 .upload-error {
-  font-size: 0.8rem;
-  color: #b91c1c;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: 8px;
+  font-size: var(--text-xs);
+  color: #ffd2ca;
+  background: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  border-radius: var(--radius-sm);
   padding: 0.5rem 0.75rem;
   margin: 0;
   white-space: pre-line;
@@ -94,10 +92,10 @@
 .upload-thumb {
   position: relative;
   aspect-ratio: 1;
-  border-radius: 10px;
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  border: 2px solid #e5e7eb;
-  background: #f3f4f6;
+  border: 2px solid rgba(183, 144, 84, 0.25);
+  background: #120d0b;
   cursor: grab;
   transition: border-color 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
@@ -107,13 +105,13 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  pointer-events: none; /* évite le ghost image du drag natif */
+  pointer-events: none;
 }
 
 /* Couverture — première image */
 .upload-thumb--cover {
-  border-color: #5b4fcf;
-  box-shadow: 0 0 0 3px rgba(91, 79, 207, 0.2);
+  border-color: rgba(214, 180, 116, 0.85);
+  box-shadow: 0 0 0 3px rgba(214, 180, 116, 0.2);
 }
 
 .upload-thumb__cover {
@@ -122,13 +120,13 @@
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 0.2rem 0.4rem;
+  padding: 0.22rem 0.4rem;
   font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #fff;
-  background: #5b4fcf;
+  color: #f0dfb8;
+  background: rgba(53, 43, 34, 0.92);
   text-align: center;
 }
 
@@ -146,8 +144,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.55);
-  border: none;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 50%;
   cursor: pointer;
   opacity: 0;
@@ -176,8 +174,8 @@
 }
 
 .upload-thumb--dragover {
-  border-color: #7c6fe0;
-  box-shadow: 0 0 0 3px rgba(124, 111, 224, 0.25);
+  border-color: rgba(214, 180, 116, 0.85);
+  box-shadow: 0 0 0 3px rgba(214, 180, 116, 0.25);
 }
 
 /* ── Input file Symfony — caché ── */

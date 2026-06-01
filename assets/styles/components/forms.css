@@ -117,3 +117,40 @@ textarea.input,
   font-size: 0.8rem;
   color: #ffb0a2;
 }
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.auth-logo h1,
+.auth-logo .brand-name {
+  font-size: var(--text-3xl);
+  margin: 0 0 var(--space-1);
+}
+
+.auth-logo p {
+  font-size: var(--text-md);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: var(--space-6);
+}
+
+.auth-footer p {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.auth-footer a {
+  color: #f0d7aa;
+  font-weight: 500;
+}
+
+.auth-footer a:hover {
+  color: #ffe5b8;
+}

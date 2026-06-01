@@ -9,6 +9,10 @@
 {% block title %}{{ item.name }} — Playmate{% endblock %}
 
 {% block body %}
+    {% include 'header.html.twig' %}
+
+    <main class="page">
+        <div class="container">
 
     {% set condLabels = {
         'neuf':     'Neuf',
@@ -182,6 +186,8 @@
         </div>
 
     </div>
+        </div>
+    </main>
 {% endblock %}
 
 {% block javascripts %}

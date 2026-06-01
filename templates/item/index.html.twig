@@ -8,6 +8,10 @@
 {% block title %}Articles — Playmate{% endblock %}
 
 {% block body %}
+{% include 'header.html.twig' %}
+
+<main class="page">
+<div class="container">
 <div class="items-page">
 
     {# ── En-tête ── #}
@@ -135,4 +139,6 @@
     {% endif %}
 
 </div>
+</div>
+</main>
 {% endblock %}
