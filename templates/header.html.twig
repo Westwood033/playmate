@@ -1,5 +1,3 @@
-<link rel="stylesheet" href="{{ asset('styles/app.css') }}">
-
 {% set current_route = app.request.attributes.get('_route') %}
 
 <header class="site-header">
@@ -13,8 +11,7 @@
 			{% if app.user %}
 				<nav class="nav">
 					{% if 'ROLE_SHOP' in app.user.roles %}
-						<a href="{{ path('item_index') }}"
-						   class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
+						<a href="{{ path('item_index') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
 							Ma Boutique
 						</a>
 						<a href="{{ path('app_tournament_index') }}"
@@ -22,8 +19,7 @@
 							Tournois
 						</a>
 					{% else %}
-						<a href="{{ path('app_tournament_new', {id: app.user.id}) }}"
-						   class="{{ current_route == 'app_tournament_new' ? 'text-body' : 'text-muted' }}">
+						<a href="{{ path('app_tournament_new', {id: app.user.id}) }}" class="{{ current_route == 'app_tournament_new' ? 'text-body' : 'text-muted' }}">
 							Créer un tournoi
 						</a>
 						<a href="{{ path('app_tournament_index') }}"
@@ -32,16 +28,15 @@
 						</a>
 					{% endif %}
 
-					<a href="{{ path('item_index') }}"
-					   class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
+					<a href="{{ path('item_index') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
 						TCG à l'achat
 					</a>
 
-                    <a href="{{ logout_path() }}" class="btn btn-secondary">
-                        Déconnexion
-                    </a>
-                </nav>
-            {% endif %}
-        </div>
-    </div>
+					<a href="{{ logout_path() }}" class="btn btn-secondary">
+						Déconnexion
+					</a>
+				</nav>
+			{% endif %}
+		</div>
+	</div>
 </header>
