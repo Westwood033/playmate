@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -37,18 +38,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $lastname = null;
 
+    /**
+     * @var Collection<int, Item>
+     */
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'owner')]
     private Collection $items;
 
     /**
-     * @var list<string> The user roles
+     * @var list<string>
      */
     #[ORM\Column]
-    private array $roles;
+    private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -75,9 +76,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
+        $this->items = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
+        $this->items = new ArrayCollection();
         $this->tournaments = new ArrayCollection();
         $this->tournamentsCreated = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $now = new DateTimeImmutable();
+
+        if ($this->createdAt === null) {
+            $this->createdAt = $now;
+        }
+
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -109,24 +130,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
     /**
@@ -134,26 +148,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): static
     {
-        $this->roles = $roles;
+        $this->roles = array_values(array_unique($roles));
 
         return $this;
     }
 
     public function addRole(string $role): static
     {
-        $this->roles[] = $role;
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
 
         return $this;
     }
 
     public function hasRole(string $role): bool
     {
-        return in_array($role, $this->roles);
+        return in_array($role, $this->getRoles(), true);
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -166,16 +179,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    #[Deprecated]
     public function eraseCredentials(): void
     {
-        // @deprecated, to be removed when upgrading to Symfony 8
-    }
-
-    #[ORM\PrePersist]
-    public function setCreatedAt(): void
-    {
-        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getCreatedAt(): ?DateTimeImmutable
@@ -183,15 +188,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->createdAt;
     }
 
-    #[ORM\PreUpdate]
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
-        $this->updatedAt = $updatedAt;
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 
     public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
     }
 
     public function isVerified(): bool
@@ -231,6 +244,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @return Collection<int, Item>
+     */
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(Item $item): static
+    {
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+            $item->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(Item $item): static
+    {
+        if ($this->items->removeElement($item)) {
+            if ($item->getOwner() === $this) {
+                $item->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Tournament>
      */
     public function getTournaments(): Collection
@@ -243,7 +285,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->tournaments->contains($tournament)) {
             $this->tournaments->add($tournament);
             $tournament->addUser($this);
-            }
+        }
 
         return $this;
     }
@@ -265,38 +307,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->tournamentsCreated;
     }
 
-    public function addTournamentsCreated(Tournament $tournamentsCreated): static
+    public function addTournamentCreated(Tournament $tournament): static
     {
-        if (!$this->tournamentsCreated->contains($tournamentsCreated)) {
-            $this->tournamentsCreated->add($tournamentsCreated);
-            $tournamentsCreated->setOwner($this);
+        if (!$this->tournamentsCreated->contains($tournament)) {
+            $this->tournamentsCreated->add($tournament);
+            $tournament->setOwner($this);
         }
 
         return $this;
     }
 
-    public function getItems(): Collection
+    public function removeTournamentCreated(Tournament $tournament): static
     {
-        return $this->items;
-    }
-
-    public function addItem(Item $item): static
-    {
-        if (!$this->items->contains($item)) {
-            $this->items->add($item);
-            $item->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeItem(Item $item): static {
-        if ($this->items->removeElement($item)) {
-            if ($item->getOwner() === $this) {
-                $item->setOwner(null);
+        if ($this->tournamentsCreated->removeElement($tournament)) {
+            if ($tournament->getOwner() === $this) {
+                $tournament->setOwner(null);
             }
         }
 
         return $this;
+    }
+    
+    public function __toString(): string
+    {
+        return $this->username;
     }
 }
