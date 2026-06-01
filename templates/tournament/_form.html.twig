@@ -5,15 +5,16 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	<link rel="stylesheet" href="{{ asset('styles/auth.css') }}">
+	<link rel="stylesheet" href="{{ asset('styles/components/form.css') }}">
+	<link rel="stylesheet" href="{{ asset('styles/components/buttons.css') }}">
 {% endblock %}
 
 {% block body %}
-	<main class="auth-page">
-		<div class="auth-container">
-			<div class="auth-card">
-				<div class="auth-logo">
-					<h1>Playmate</h1>
+	<main class="page">
+		<div class="container">
+			<div class="card">
+				<div class="logo">
+					<h1 class="brand-name">Playmate</h1>
 					<p>Créez un tournoi</p>
 				</div>
 
@@ -84,7 +85,7 @@
 						</div>
 					</div>
 				</div>
-				<button type="submit" class="btn-auth">Créer</button>
+				<button type="submit" class="btn btn-secondary">Créer</button>
 				{{ form_end(form) }}
 			</div>
 		</div>
