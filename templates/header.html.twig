@@ -26,6 +26,10 @@
 						   class="{{ current_route == 'app_tournament_index' ? 'text-body' : 'text-muted' }}">
 							Tournois
 						</a>
+						<a href="{{ path('app_shop_request') }}"
+                           class="{% if app.request.getPathInfo() starts with path('app_shop_request') %}text-body{% else %}text-muted{% endif %}">
+                            Je suis une boutique
+                    </a>
 					{% endif %}
 
 					<a href="{{ path('item_index') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
