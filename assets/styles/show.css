@@ -63,7 +63,7 @@
 /* Image principale */
 .show-gallery__main {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 63 / 88;
   border-radius: var(--radius-md);
   overflow: hidden;
   background: #120d0b;
@@ -137,7 +137,9 @@
   padding: 0;
   cursor: pointer;
   flex-shrink: 0;
-  transition: border-color 0.15s, opacity 0.15s;
+  transition:
+    border-color 0.15s,
+    opacity 0.15s;
   opacity: 0.65;
 }
 
@@ -264,8 +266,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, rgba(255, 232, 186, 0.16), transparent 55%),
-              linear-gradient(180deg, #3a2d22 0%, #201813 100%);
+  background: radial-gradient(circle at 30% 30%, rgba(255, 232, 186, 0.16), transparent 55%), linear-gradient(180deg, #3a2d22 0%, #201813 100%);
   border: 1px solid rgba(196, 155, 91, 0.45);
   color: #f1dfb3;
   font-size: 1.1rem;
@@ -327,7 +328,9 @@
   border: 1px solid rgba(186, 168, 255, 0.22);
   border-radius: var(--radius-sm);
   text-decoration: none;
-  transition: background 0.2s, transform 0.1s;
+  transition:
+    background 0.2s,
+    transform 0.1s;
   box-shadow:
     0 8px 20px rgba(91, 72, 211, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -367,7 +370,9 @@
   border: 1px solid rgba(183, 144, 84, 0.4);
   border-radius: var(--radius-sm);
   text-decoration: none;
-  transition: background 0.2s, border-color 0.2s;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
   flex: 1;
   justify-content: center;
 }
