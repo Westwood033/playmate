@@ -3,10 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ItemRepository;
-<<<<<<< HEAD
-=======
 use DateTimeImmutable;
->>>>>>> develop
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,28 +18,9 @@ class Item
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-<<<<<<< HEAD
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $description = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $price = null;
-
     #[ORM\Column]
     private ?\DateTimeImmutable $dateCreated = null;
-
-    #[ORM\Column]
-    private bool $isSold = false;
-
-    #[ORM\Column(type: Types::JSON)]
-    private array $images = [];
-
-    public function __construct()
-    {
-        $this->dateCreated = new \DateTimeImmutable();
-        $this->isSold = false;
-        $this->images = [];
-=======
+    
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
 
@@ -72,7 +50,6 @@ class Item
     {
         $this->createdAt = new DateTimeImmutable();
         $this->isSold = false;
->>>>>>> develop
     }
 
     public function getId(): ?int
@@ -91,20 +68,6 @@ class Item
         return $this;
     }
 
-<<<<<<< HEAD
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(string $description): static
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-=======
->>>>>>> develop
     public function getPrice(): ?string
     {
         return $this->price;
@@ -116,8 +79,7 @@ class Item
         return $this;
     }
 
-<<<<<<< HEAD
-    public function getDateCreated(): ?\DateTimeImmutable
+public function getDateCreated(): ?\DateTimeImmutable
     {
         return $this->dateCreated;
     }
@@ -126,11 +88,7 @@ class Item
     {
         $this->dateCreated = $dateCreated;
         return $this;
-    }
-
-    public function isSold(): bool
-=======
-    public function getDescription(): ?string
+    }    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -175,7 +133,6 @@ class Item
     }
 
     public function isSold(): ?bool
->>>>>>> develop
     {
         return $this->isSold;
     }
@@ -197,14 +154,6 @@ class Item
         return $this;
     }
 
-<<<<<<< HEAD
-    public function addImage(string $image): static
-    {
-        $this->images[] = $image;
-        return $this;
-    }
-}
-=======
     public function getOwner(): ?User
     {
         return $this->owner;
@@ -216,4 +165,3 @@ class Item
         return $this;
     }
 }
->>>>>>> develop

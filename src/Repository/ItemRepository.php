@@ -6,12 +6,9 @@ use App\Entity\Item;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-<<<<<<< HEAD
-=======
 /**
  * @extends ServiceEntityRepository<Item>
  */
->>>>>>> develop
 class ItemRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -19,8 +16,8 @@ class ItemRepository extends ServiceEntityRepository
         parent::__construct($registry, Item::class);
     }
 
-<<<<<<< HEAD
-    public function findLatestForSale(int $limit = 10): array
+
+public function findLatestForSale(int $limit = 10): array
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.isSold = :sold')
@@ -30,8 +27,6 @@ class ItemRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-}
-=======
     /**
      * Recherche filtrée par mot-clé, catégorie, état, statut vendu.
      *
@@ -68,4 +63,3 @@ class ItemRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 }
->>>>>>> develop
