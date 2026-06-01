@@ -11,6 +11,10 @@
   padding: 0;
 }
 
+textarea {
+  resize: none;
+}
+
 html,
 body {
   width: 100%;

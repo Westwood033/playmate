@@ -33,9 +33,9 @@ final class ShopController extends AbstractController
 
             $entityManager->flush();
 
-            $this->addFlash('success', 'Demande envoyée.');
+            $this->addFlash('info', 'Une demande a été envoyé. Vous recevrez une confirmation par email');
 
-            return $this->redirectToRoute('app_shop_request');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('shop/request.html.twig', [
