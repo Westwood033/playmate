@@ -32,6 +32,7 @@
 .form-group input[type="search"],
 .form-group input[type="url"],
 .form-group input[type="number"],
+.form-group input[type="date"],
 .form-group textarea,
 .form-group select {
   width: 100%;
@@ -52,6 +53,13 @@
   appearance: none;
 }
 
+.location-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+
 .input:focus,
 .form-group input:focus,
 .form-group textarea:focus,
@@ -61,6 +69,7 @@
   box-shadow:
     0 0 0 3px rgba(110, 90, 230, 0.16),
     0 0 0 1px rgba(214, 180, 116, 0.16) inset;
+  color: var(--color-text-soft);
 }
 
 .input::placeholder,
@@ -72,7 +81,7 @@
 textarea.input,
 .form-group textarea {
   min-height: 120px;
-  resize: vertical;
+  resize: none;
 }
 
 .form-check {

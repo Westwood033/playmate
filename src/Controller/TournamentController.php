@@ -41,7 +41,12 @@ final class TournamentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $street = $form->get('street')->getData();
+            $postalCode = $form->get('postalCode')->getData();
+            $city = $form->get('city')->getData();
+            $country = $form->get('country')->getData();
             $tournament->setCreationDate(New DateTime());
+            $tournament->setAddress($street . " " . $postalCode . " " . $city . " " . $country);
             $tournament->setOwner($user);
             $entityManager->persist($tournament);
             $entityManager->flush();
