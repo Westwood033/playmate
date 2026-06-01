@@ -61,6 +61,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shopAddress = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $shopRequest = false;
+
     public function __construct()
     {
         $this->items = new ArrayCollection();
@@ -171,9 +180,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     #[ORM\PreUpdate]
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): void
+    public function setUpdatedAt(): void
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getUpdatedAt(): ?DateTimeImmutable
@@ -241,6 +250,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
+    public function getShopAddress(): ?string
+    {
+        return $this->shopAddress;
+    }
+
+    public function setShopAddress(?string $shopAddress): static
+    {
+       $this->shopAddress = $shopAddress;
+
+       return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+       return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+   {
+       $this->phone = $phone;
+
+       return $this;
+   }
+
+   public function isShopRequest(): ?bool
+   {
+       return $this->shopRequest;
+   }
+
+   public function setShopRequest(?bool $shopRequest): static
+   {
+       $this->shopRequest = $shopRequest;
+
+       return $this;
+   }
 
     public function __toString(): string
     {
