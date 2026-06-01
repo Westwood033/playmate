@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -42,7 +43,7 @@ class ShopValidationController extends AbstractController
 
         $em->flush();
 
-        $email = (new Email())
+        $email = (new TemplatedEmail())
             ->from("noreply@playmate.fr")
             ->to($user->getEmail())
             ->subject("Demande de boutique acceptée")
@@ -50,14 +51,14 @@ class ShopValidationController extends AbstractController
             ->context([
                 'shopName' => $user->getShopName(),
                 'shopAddress' => $user->getShopAddress(),
-                'shopPhone' => $user->getShopPhone(),
+                'shopPhone' => $user->getPhone(),
             ]);
 
         $this->mailer->send($email);
 
         $this->addFlash('success', 'Boutique validée avec succès.');
 
-        return $this->redirectToRoute('app_shop_request');
+        return $this->redirectToRoute('admin_shop_request_index');
     }
 
     /**
@@ -75,7 +76,7 @@ class ShopValidationController extends AbstractController
 
         $em->flush();
 
-        $email = (new Email())
+        $email = (new TemplatedEmail())
             ->from("noreply@playmate.fr")
             ->to($user->getEmail())
             ->subject("Demande de boutique refusée")
@@ -83,13 +84,13 @@ class ShopValidationController extends AbstractController
             ->context([
                 'shopName' => $user->getShopName(),
                 'shopAddress' => $user->getShopAddress(),
-                'shopPhone' => $user->getShopPhone(),
+                'shopPhone' => $user->getPhone(),
             ]);
 
         $this->mailer->send($email);
 
         $this->addFlash('success', 'Demande boutique refusée.');
 
-        return $this->redirectToRoute('app_shop_request');
+        return $this->redirectToRoute('admin_shop_request_index');
     }
 }

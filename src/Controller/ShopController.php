@@ -21,6 +21,7 @@ final class ShopController extends AbstractController
         $user = $this->getUser();
         if ($user->hasRole('ROLE_SHOP')) {
             $this->addFlash('warning', 'Vous disposez déjà d\'un compte boutique. Pour le modifier, veuillez contacter le support.');
+            return $this->redirectToRoute('app_home');
         }
 
         $form = $this->createForm(ShopRequestType::class, $user);

@@ -33,7 +33,7 @@ class ShopRequestType extends AbstractType
 
              ->add('street', TextType::class, [
                 'mapped' => false,
-                'label' => 'Où se situt votre boutique',
+                'label' => 'Où se situe votre boutique',
             ])
 
             ->add('postalCode', TextType::class, [

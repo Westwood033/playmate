@@ -143,7 +143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     public function getRoles(): array
@@ -318,6 +318,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->shopRequest = $shopRequest;
 
         return $this;
+    }
+
+    public function getShopName(): ?string
+    {
+        return $this->shopName;
+    }
+
+    public function setShopName(?string $shopName): void
+    {
+        $this->shopName = $shopName;
+    }
+
+    public function getTournamentsCreated(): Collection
+    {
+        return $this->tournamentsCreated;
+    }
+
+    public function setTournamentsCreated(Collection $tournamentsCreated): void
+    {
+        $this->tournamentsCreated = $tournamentsCreated;
+    }
+
+    public function getTournaments(): Collection
+    {
+        return $this->tournaments;
+    }
+
+    public function setTournaments(Collection $tournaments): void
+    {
+        $this->tournaments = $tournaments;
     }
 
     public function __toString(): string

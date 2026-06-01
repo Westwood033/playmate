@@ -31,7 +31,7 @@ class ShopRequestCrudController extends AbstractCrudController
             ->setPageTitle(Crud::PAGE_INDEX, 'Requêtes boutiques')
             ->setEntityLabelInPlural('Boutiques')
             ->setEntityLabelInSingular('Boutique')
-            ->setSearchFields(['username', 'shopName', 'shopAddress', 'shopPhone'])
+            ->setSearchFields(['username', 'shopName', 'shopAddress', 'phone'])
             ->setDefaultSort(['username' => 'ASC']);
 
         return $crud;
@@ -48,7 +48,7 @@ class ShopRequestCrudController extends AbstractCrudController
             ->addCssClass('btn-danger');
 
         return $actions
-            ->disable(Crud::PAGE_NEW, Crud::PAGE_EDIT, Crud::PAGE_DETAIL)
+            ->disable(Crud::PAGE_NEW, Crud::PAGE_EDIT, Crud::PAGE_DETAIL, Action::DELETE)
             ->add(Crud::PAGE_INDEX, $accept)
             ->add(Crud::PAGE_INDEX, $reject);
     }
@@ -59,7 +59,7 @@ class ShopRequestCrudController extends AbstractCrudController
             TextField::new('username', 'Utilisateur'),
             TextField::new('shopName', 'Boutique'),
             TextField::new('shopAddress', 'Adresse'),
-            TextField::new('shopPhone', 'Téléphone'),
+            TextField::new('phone', 'Téléphone'),
         ];
     }
 
