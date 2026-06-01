@@ -13,6 +13,11 @@ final class HomeController extends AbstractController
     #[Route(name: 'app_home', methods: ['GET'])]
     public function index(ItemRepository $itemRepository): Response
     {
+        $user = $this->getUser();
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $latestItems = $itemRepository->findLatestForSale(10);
 
         return $this->render('home.html.twig', [
