@@ -21,7 +21,7 @@ class Item
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     private ?string $price = null;
 
-    #[ORM\Column(length: 2047, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 100, nullable: true)]
@@ -34,12 +34,12 @@ class Item
     private ?DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?bool $isSold = false;
+    private bool $isSold = false;
 
-    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
+    #[ORM\Column(type: Types::JSON)]
     private array $images = [];
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'items')]
+    #[ORM\ManyToOne(inversedBy: 'items')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
@@ -47,6 +47,7 @@ class Item
     {
         $this->createdAt = new DateTimeImmutable();
         $this->isSold = false;
+        $this->images = [];
     }
 
     public function getId(): ?int
@@ -62,6 +63,7 @@ class Item
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -73,6 +75,7 @@ class Item
     public function setPrice(string $price): static
     {
         $this->price = $price;
+
         return $this;
     }
 
@@ -84,6 +87,7 @@ class Item
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
         return $this;
     }
 
@@ -95,6 +99,7 @@ class Item
     public function setCategory(?string $category): static
     {
         $this->category = $category;
+
         return $this;
     }
 
@@ -106,6 +111,7 @@ class Item
     public function setCondition(?string $condition): static
     {
         $this->condition = $condition;
+
         return $this;
     }
 
@@ -117,10 +123,11 @@ class Item
     public function setCreatedAt(DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
-    public function isSold(): ?bool
+    public function isSold(): bool
     {
         return $this->isSold;
     }
@@ -128,6 +135,7 @@ class Item
     public function setIsSold(bool $isSold): static
     {
         $this->isSold = $isSold;
+
         return $this;
     }
 
@@ -139,6 +147,24 @@ class Item
     public function setImages(array $images): static
     {
         $this->images = $images;
+
+        return $this;
+    }
+
+    public function addImage(string $image): static
+    {
+        $this->images[] = $image;
+
+        return $this;
+    }
+
+    public function removeImage(string $image): static
+    {
+        $this->images = array_values(array_filter(
+            $this->images,
+            static fn (string $existingImage): bool => $existingImage !== $image
+        ));
+
         return $this;
     }
 
@@ -150,6 +176,7 @@ class Item
     public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
+
         return $this;
     }
 }

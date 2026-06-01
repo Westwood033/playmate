@@ -5,13 +5,13 @@ namespace App\Controller;
 use App\Entity\Tournament;
 use App\Form\TournamentType;
 use App\Repository\TournamentRepository;
-use DateTime;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Datetime;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Entity\User;
 
 #[Route('/tournament')]
 final class TournamentController extends AbstractController
@@ -24,8 +24,17 @@ final class TournamentController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_tournament_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_tournament_list', methods: ['GET'])]
+    public function list(User $user): Response
+    {
+        
+        return $this->render('tournament/index.html.twig', [
+            //'tournaments' => $user->getTournaments,
+        ]);
+    }
+
+    #[Route('/new/{id}', name: 'app_tournament_new', methods: ['GET', 'POST'])]
+    public function new(User $user, Request $request, EntityManagerInterface $entityManager): Response
     {
         $tournament = new Tournament();
         $form = $this->createForm(TournamentType::class, $tournament);
@@ -33,6 +42,7 @@ final class TournamentController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $tournament->setCreationDate(New DateTime());
+            $tournament->setOwner($user);
             $entityManager->persist($tournament);
             $entityManager->flush();
 
@@ -78,6 +88,21 @@ final class TournamentController extends AbstractController
             $entityManager->remove($tournament);
             $entityManager->flush();
         }
+
+        return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
+    }
+    
+     #[Route('/{id}/user/{userId}', name: 'app_tournament_user_add', methods: ['POST'])]
+      public function addUser(Request $request, Tournament $tournament, EntityManagerInterface $entityManager): Response
+    {
+        $userId = $request->get('userId');
+        $user = $entityManager->getRepository(User::class)->find($userId);
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        $tournament->addUser($user);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
     }
