@@ -1,4 +1,28 @@
-{{ form_errors(form) }}
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Tournoi
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	
+
+{% endblock %}
+
+{% block body %}
+	<main class="page">
+		<div class="container">
+			<div class="card">
+				<div class="logo">
+					<h1 class="brand-name">Playmate</h1>
+					<p>Créez un tournoi</p>
+				</div>
+
+				{% for flash_error in app.flashes('verify_email_error') %}
+					<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+				{% endfor %}
+
+				{{ form_errors(form) }}
 
 {{ form_start(form, {'attr': {'class': 'auth-form'}}) }}
 	<div class="form-group">

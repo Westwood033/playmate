@@ -62,6 +62,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shopAddress = null;
+
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $shopRequest = false;
+
     /**
      * @var Collection<int, Tournament>
      */
@@ -272,64 +281,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Tournament>
-     */
-    public function getTournaments(): Collection
+
+    public function getShopAddress(): ?string
     {
-        return $this->tournaments;
+        return $this->shopAddress;
     }
 
-    public function addTournament(Tournament $tournament): static
+    public function setShopAddress(?string $shopAddress): static
     {
-        if (!$this->tournaments->contains($tournament)) {
-            $this->tournaments->add($tournament);
-            $tournament->addUser($this);
-        }
+       $this->shopAddress = $shopAddress;
+
+       return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+       return $this->phone;
+    }
+
+    public function setPhone(?string $phone): static
+   {
+       $this->phone = $phone;
+
+       return $this;
+   }
+
+   public function isShopRequest(): ?bool
+   {
+       return $this->shopRequest;
+   }
+
+   public function setShopRequest(?bool $shopRequest): static
+   {
+       $this->shopRequest = $shopRequest;
 
         return $this;
-    }
-
-    public function removeTournament(Tournament $tournament): static
-    {
-        if ($this->tournaments->removeElement($tournament)) {
-            $tournament->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Tournament>
-     */
-    public function getTournamentsCreated(): Collection
-    {
-        return $this->tournamentsCreated;
-    }
-
-    public function addTournamentCreated(Tournament $tournament): static
-    {
-        if (!$this->tournamentsCreated->contains($tournament)) {
-            $this->tournamentsCreated->add($tournament);
-            $tournament->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTournamentCreated(Tournament $tournament): static
-    {
-        if ($this->tournamentsCreated->removeElement($tournament)) {
-            if ($tournament->getOwner() === $this) {
-                $tournament->setOwner(null);
-            }
-        }
-
-        return $this;
-    }
-    
-    public function __toString(): string
-    {
-        return $this->username;
     }
 }

@@ -150,26 +150,45 @@
 							</div>
 						</div>
 
-						{% if upcomingEvents is defined and upcomingEvents|length > 0 %}
-							<div class="stack mt-4">
-								{% for event in upcomingEvents %}
-									<article class="panel">
-										<h3 class="small mb-1">{{ event.title }}</h3>
-										<p class="small text-muted mb-1">
-											{{ event.date ? event.date|date('d/m/Y H:i') : 'Date à confirmer' }}
-										</p>
-										<p class="small text-muted">
-											{{ event.location ?? 'Lieu non précisé' }}
-										</p>
-									</article>
-								{% endfor %}
-							</div>
-						{% else %}
-							<p class="text-muted mt-4">Aucun événement à venir.</p>
-						{% endif %}
-					</section>
-				</aside>
-			</div>
-		</div>
-	</main>
+                        {% if upcomingEvents is defined and upcomingEvents|length > 0 %}
+                            <div class="stack mt-4">
+                                {% for event in upcomingEvents %}
+                                    <article class="panel">
+                                        <h3 class="small mb-1">{{ event.title }}</h3>
+                                        <p class="small text-muted mb-1">
+                                            {{ event.date ? event.date|date('d/m/Y H:i') : 'Date à confirmer' }}
+                                        </p>
+                                        <p class="small text-muted">
+                                            {{ event.location ?? 'Lieu non précisé' }}
+                                        </p>
+                                    </article>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted mt-4">Aucun événement à venir.</p>
+                        {% endif %}
+                    </section>
+                </aside>
+            </div>
+        </div>
+        <div class="flash-container">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-notification flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </main>
+
+<script>
+    setTimeout(() => {
+        document.querySelectorAll('.flash-notification').forEach(el => {
+            el.style.transition = '0.5s';
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 500);
+        });
+    }, 5000);
+</script>
 {% endblock %}

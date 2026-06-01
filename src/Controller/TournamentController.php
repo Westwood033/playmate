@@ -50,6 +50,8 @@ final class TournamentController extends AbstractController
             $entityManager->persist($tournament);
             $entityManager->flush();
 
+            $this->addFlash('success', 'Votre tournoi est maintenant disponible');
+
             return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
         }
 
