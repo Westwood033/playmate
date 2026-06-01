@@ -2,6 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\Admin\Crud\ItemCrudController;
+use App\Controller\Admin\Crud\ShopRequestCrudController;
+use App\Controller\Admin\Crud\UserCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -27,5 +30,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-users');
         yield MenuItem::linkTo(ItemCrudController::class, 'Articles', 'fas fa-shopping-cart');
+        yield MenuItem::linkTo(ShopRequestCrudController::class, 'Boutiques', 'fas fa-store');
     }
 }

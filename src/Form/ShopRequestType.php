@@ -16,7 +16,7 @@ class ShopRequestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('username', null, [
+            ->add('shopName', null, [
                 'label' => 'Nom de la boutique',
                 'constraints' => [
                     new NotBlank([
@@ -39,7 +39,7 @@ class ShopRequestType extends AbstractType
                 ],
             ])
 
-            ->add('phone', TelType::class, [
+            ->add('shopPhone', TelType::class, [
                 'label' => 'Téléphone',
                 'constraints' => [
                     new NotBlank([

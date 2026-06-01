@@ -13,29 +13,26 @@ final class ShopController extends AbstractController
 {
     #[Route('/shop/request', name: 'app_shop_request')]
     public function request(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $entityManager
-    ): Response {
+    ): Response
+    {
 
         $user = $this->getUser();
-
-         if (!$user) {
-           return $this->redirectToRoute('app_login');
-         }
+        if ($user->hasRole('ROLE_SHOP')) {
+            $this->addFlash('warning', 'Vous disposez déjà d\'un compte boutique. Pour le modifier, veuillez contacter le support.');
+        }
 
         $form = $this->createForm(ShopRequestType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user->setShopRequest(true);
-
             $entityManager->flush();
 
-            $this->addFlash('success', 'Demande envoyée.');
-
-            return $this->redirectToRoute('app_shop_request');
+            $this->addFlash('success', 'Votre demande a bien été envoyée. Vous recevrez une réponse sous peu.');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('shop/request.html.twig', [

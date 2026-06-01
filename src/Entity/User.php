@@ -28,6 +28,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $phone = null;
+
     #[ORM\Column(length: 180)]
     private ?string $username = null;
 
@@ -62,10 +65,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shopName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $shopAddress = null;
 
     #[ORM\Column(length: 20, nullable: true)]
-    private ?string $phone = null;
+    private ?string $shopPhone = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $shopRequest = false;
@@ -241,7 +247,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeItem(Item $item): static {
+    public function removeItem(Item $item): static
+    {
         if ($this->items->removeElement($item)) {
             if ($item->getOwner() === $this) {
                 $item->setOwner(null);
@@ -259,34 +266,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setShopAddress(?string $shopAddress): static
     {
-       $this->shopAddress = $shopAddress;
+        $this->shopAddress = $shopAddress;
 
-       return $this;
+        return $this;
     }
 
     public function getPhone(): ?string
     {
-       return $this->phone;
+        return $this->phone;
     }
 
     public function setPhone(?string $phone): static
-   {
-       $this->phone = $phone;
+    {
+        $this->phone = $phone;
 
-       return $this;
-   }
+        return $this;
+    }
 
-   public function isShopRequest(): ?bool
-   {
-       return $this->shopRequest;
-   }
+    public function isShopRequest(): ?bool
+    {
+        return $this->shopRequest;
+    }
 
-   public function setShopRequest(?bool $shopRequest): static
-   {
-       $this->shopRequest = $shopRequest;
+    public function setShopRequest(?bool $shopRequest): static
+    {
+        $this->shopRequest = $shopRequest;
 
-       return $this;
-   }
+        return $this;
+    }
+
+    public function getShopName(): ?string
+    {
+        return $this->shopName;
+    }
+
+    public function setShopName(?string $shopName): void
+    {
+        $this->shopName = $shopName;
+    }
+
+    public function getShopPhone(): ?string
+    {
+        return $this->shopPhone;
+    }
+
+    public function setShopPhone(?string $shopPhone): void
+    {
+        $this->shopPhone = $shopPhone;
+    }
 
     public function __toString(): string
     {
