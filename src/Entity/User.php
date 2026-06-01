@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -28,9 +29,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $phone = null;
-
     #[ORM\Column(length: 180)]
     private ?string $username = null;
 
@@ -40,18 +38,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $lastname = null;
 
+    /**
+     * @var Collection<int, Item>
+     */
     #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'owner')]
     private Collection $items;
 
     /**
-     * @var list<string> The user roles
+     * @var list<string>
      */
     #[ORM\Column]
-    private array $roles;
+    private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
@@ -71,15 +69,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $shopAddress = null;
 
     #[ORM\Column(length: 20, nullable: true)]
-    private ?string $shopPhone = null;
+    private ?string $phone = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $shopRequest = false;
 
+    /**
+     * @var Collection<int, Tournament>
+     */
+    #[ORM\ManyToMany(targetEntity: Tournament::class, mappedBy: 'users')]
+    private Collection $tournaments;
+
+    /**
+     * @var Collection<int, Tournament>
+     */
+    #[ORM\OneToMany(targetEntity: Tournament::class, mappedBy: 'owner')]
+    private Collection $tournamentsCreated;
+
     public function __construct()
     {
-        $this->items = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
+        $this->items = new ArrayCollection();
+        $this->tournaments = new ArrayCollection();
+        $this->tournamentsCreated = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $now = new DateTimeImmutable();
+
+        if ($this->createdAt === null) {
+            $this->createdAt = $now;
+        }
+
+        $this->updatedAt = $now;
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -111,24 +141,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
-        return (string)$this->email;
+        return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_values(array_unique($roles));
     }
 
     /**
@@ -136,26 +159,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setRoles(array $roles): static
     {
-        $this->roles = $roles;
+        $this->roles = array_values(array_unique($roles));
 
         return $this;
     }
 
     public function addRole(string $role): static
     {
-        $this->roles[] = $role;
+        if (!in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
 
         return $this;
     }
 
     public function hasRole(string $role): bool
     {
-        return in_array($role, $this->roles);
+        return in_array($role, $this->getRoles(), true);
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -232,6 +254,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, Item>
+     */
     public function getItems(): Collection
     {
         return $this->items;
@@ -293,26 +318,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->shopRequest = $shopRequest;
 
         return $this;
-    }
-
-    public function getShopName(): ?string
-    {
-        return $this->shopName;
-    }
-
-    public function setShopName(?string $shopName): void
-    {
-        $this->shopName = $shopName;
-    }
-
-    public function getShopPhone(): ?string
-    {
-        return $this->shopPhone;
-    }
-
-    public function setShopPhone(?string $shopPhone): void
-    {
-        $this->shopPhone = $shopPhone;
     }
 
     public function __toString(): string

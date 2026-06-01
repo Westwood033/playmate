@@ -1,0 +1,47 @@
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: #f0dfb8;
+  margin: 0 0 var(--space-1);
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+
+.page-title {
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: #f3e6c7;
+  letter-spacing: -0.8px;
+  line-height: 1.1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.28);
+}
+
+.section-title {
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: #ead7ac;
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.4px;
+}
+
+.lead {
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  line-height: 1.65;
+}
+
+.text-muted {
+  color: var(--color-text-muted);
+}
+
+.text-soft {
+  color: var(--color-text-soft);
+}
+
+.small {
+  font-size: var(--text-sm);
+}
+
+.text-center {
+  text-align: center;
+}
