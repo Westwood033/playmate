@@ -131,7 +131,7 @@ class ItemFixtures extends Fixture
                 ->setName($data['name'])
                 ->setDescription($data['description'])
                 ->setPrice($data['price'])
-                ->setDateCreated(new \DateTimeImmutable($data['dateCreated']))
+                ->setCreatedAt(new \DateTimeImmutable($data['dateCreated']))
                 ->setIsSold($data['isSold'])
                 ->setImages($data['images']);
 
