@@ -5,7 +5,10 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Deprecated;
+<<<<<<< HEAD
 use Doctrine\Common\Collections\ArrayCollection;
+=======
+>>>>>>> develop
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -36,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180)]
     private ?string $lastname = null;
+
+    #[ORM\OneToMany(targetEntity: Item::class, mappedBy: 'owner')]
+    private Collection $items;
 
     /**
      * @var list<string> The user roles
@@ -227,6 +233,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+<<<<<<< HEAD
     /**
      * @return Collection<int, Tournament>
      */
@@ -240,11 +247,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!$this->tournaments->contains($tournament)) {
             $this->tournaments->add($tournament);
             $tournament->addUser($this);
+=======
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function addItem(Item $item): static
+    {
+        if (!$this->items->contains($item)) {
+            $this->items->add($item);
+            $item->setOwner($this);
+>>>>>>> develop
         }
 
         return $this;
     }
 
+<<<<<<< HEAD
     public function removeTournament(Tournament $tournament): static
     {
         if ($this->tournaments->removeElement($tournament)) {
@@ -278,6 +298,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($tournamentsCreated->getOwner() === $this) {
                 $tournamentsCreated->setOwner(null);
+=======
+    public function removeItem(Item $item): static {
+        if ($this->items->removeElement($item)) {
+            if ($item->getOwner() === $this) {
+                $item->setOwner(null);
+>>>>>>> develop
             }
         }
 
