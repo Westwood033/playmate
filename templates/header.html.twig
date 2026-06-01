@@ -22,8 +22,8 @@
                         </a>
                     {% else %}
 
-                    <a href="{{ path('app_shop_request', {id: app.user.id}) }}"
-                           class="{% if app.request.getPathInfo() starts with path('app_shop_request', {id: app.user.id}) %}text-body{% else %}text-muted{% endif %}">
+                    <a href="{{ path('app_shop_request') }}"
+                           class="{% if app.request.getPathInfo() starts with path('app_shop_request') %}text-body{% else %}text-muted{% endif %}">
                             Je suis une boutique
                     </a>
 

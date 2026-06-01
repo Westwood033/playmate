@@ -29,6 +29,12 @@ final class ShopController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $street = $form->get('street')->getData();
+            $postalCode = $form->get('postalCode')->getData();
+            $city = $form->get('city')->getData();
+            $country = $form->get('country')->getData();
+
+            $user->setShopAddress($street . " " . $postalCode . " " . $city . " " . $country);
             $user->setShopRequest(true);
 
             $entityManager->flush();
