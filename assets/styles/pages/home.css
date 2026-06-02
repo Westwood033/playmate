@@ -105,54 +105,96 @@
   }
 }
 
-
 .flash-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
 }
 
 .flash-notification {
-    min-width: 300px;
-    padding: 15px 20px;
-    margin-bottom: 10px;
-    border-radius: 8px;
-    color: white;
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    animation: slideIn 0.3s ease;
+  min-width: 300px;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease;
 }
 
 /* Succès */
 .flash-success {
-    background-color: #28a745;
+  background-color: #28a745;
 }
 
 /* Erreur */
 .flash-error,
 .flash-danger {
-    background-color: #dc3545;
+  background-color: #dc3545;
 }
 
 /* Avertissement */
 .flash-warning {
-    background-color: #ffc107;
-    color: #212529;
+  background-color: #ffc107;
+  color: #212529;
 }
 
 /* Info */
 .flash-info {
-    background-color: #17a2b8;
+  background-color: #17a2b8;
 }
 
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.tcg-news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.tcg-news-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(183, 144, 84, 0.18);
+  border-radius: 16px;
+  background: rgba(20, 14, 10, 0.72);
+}
+
+.tcg-news-card__image-wrap {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.tcg-news-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tcg-news-card__content {
+  padding: 1rem;
+}
+
+.tcg-news-card__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  color: #f0dfb8;
+}
+
+.tcg-news-card__meta {
+  margin: 0.2rem 0;
+  color: rgba(240, 223, 184, 0.75);
+  font-size: 0.9rem;
 }
