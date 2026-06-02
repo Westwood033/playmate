@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Admin\Crud\ItemCrudController;
 use App\Controller\Admin\Crud\ShopRequestCrudController;
+use App\Controller\Admin\Crud\TournamentCrudController;
 use App\Controller\Admin\Crud\UserCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -30,6 +31,10 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fas fa-users');
         yield MenuItem::linkTo(ItemCrudController::class, 'Articles', 'fas fa-shopping-cart');
+        yield MenuItem::linkTo(TournamentCrudController::class, 'Tournois', 'fas fa-trophy');
         yield MenuItem::linkTo(ShopRequestCrudController::class, 'Boutiques', 'fas fa-store');
+
+        yield MenuItem::section();
+        yield MenuItem::linkToRoute('Retour au site', 'fas fa-arrow-left', 'app_home');
     }
 }
