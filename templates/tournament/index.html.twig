@@ -13,7 +13,7 @@
 					<h1>Tournois</h1>
 					<p>{{ tournaments|length }} tournoi{{ tournaments|length != 1 ? 's' : '' }}</p>
 				</div>
-				{% if app.user %}
+				{% if app.user and 'ROLE_SHOP' in app.user.roles %}
 					<a href="{{ path('app_tournament_new', {id: app.user.id}) }}" class="btn-publish">
 						<span class="btn-publish__icon">+</span>
 						Créer un tournoi
