@@ -30,8 +30,8 @@ class GenerateFixturesCommand extends Command
     {
         $this
             ->addOption('users', 'u', InputOption::VALUE_OPTIONAL, 'Nombre d\'utilisateurs à créer', 5)
-            ->addOption('items', 'i', InputOption::VALUE_OPTIONAL, 'Nombre d\'articles à créer', 20)
-            ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Mot de passe commun pour tous les users', 'password')
+            ->addOption('items', 'i', InputOption::VALUE_OPTIONAL, 'Nombre total d\'articles à créer', 20)
+            ->addOption('password', 'p', InputOption::VALUE_OPTIONAL, 'Mot de passe commun pour tous les utilisateurs', 'password')
             ->addOption('clear', 'c', InputOption::VALUE_NONE, 'Vider les tables avant de générer');
     }
 
@@ -39,40 +39,44 @@ class GenerateFixturesCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $nbUsers    = max(1, (int) $input->getOption('users'));
-        $nbItems    = max(0, (int) $input->getOption('items'));
-        $password   = (string) $input->getOption('password');
-        $clear      = (bool)   $input->getOption('clear');
+        $nbUsers = max(1, (int) $input->getOption('users'));
+        $nbItems = max(0, (int) $input->getOption('items'));
+        $password = (string) $input->getOption('password');
+        $clear = (bool) $input->getOption('clear');
 
-        // ── Vider les tables ─────────────────────────────────────────────────
+        if ($password === '') {
+            $io->error('Le mot de passe ne peut pas être vide.');
+
+            return Command::INVALID;
+        }
+
         if ($clear) {
-            $io->warning('Suppression des données existantes…');
-            $this->em->createQuery('DELETE FROM App\Entity\Item')->execute();
-            $this->em->createQuery('DELETE FROM App\Entity\User')->execute();
+            $io->warning('Suppression des données existantes...');
+            $this->em->createQuery('DELETE FROM App\Entity\Item i')->execute();
+            $this->em->createQuery('DELETE FROM App\Entity\User u')->execute();
+            $this->em->clear();
             $io->text('Tables vidées.');
         }
 
         $io->title('Génération des fixtures');
         $io->text(sprintf(
-            'Création de <info>%d utilisateur(s)</info> et <info>%d article(s)</info>…',
+            'Création de %d utilisateur(s) et jusqu’à %d article(s)...',
             $nbUsers,
             $nbItems
         ));
 
-        // ── Utilisateurs ─────────────────────────────────────────────────────
         $users = [];
 
         for ($i = 1; $i <= $nbUsers; $i++) {
             $user = new User();
             $user->setEmail(sprintf('user%d@playmate.dev', $i));
-            $user->setUsername(sprintf('%s%d', $this->randomUsername(), $i));
+            $user->setUsername(sprintf('%s%d', strtolower($this->randomUsername()), $i));
             $user->setFirstname($this->randomFirstname());
             $user->setLastname($this->randomLastname());
             $user->setPassword($this->hasher->hashPassword($user, $password));
             $user->setIsVerified(true);
             $user->setAddress($this->randomAddress());
 
-            // ~20 % d'admins
             if ($i === 1 || random_int(1, 5) === 1) {
                 $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
             } else {
@@ -84,57 +88,236 @@ class GenerateFixturesCommand extends Command
         }
 
         $this->em->flush();
-        $io->text(sprintf('  ✓ %d utilisateur(s) créé(s)', $nbUsers));
 
-        // ── Articles ─────────────────────────────────────────────────────────
+        $io->text(sprintf('✓ %d utilisateur(s) créé(s)', $nbUsers));
+
+        $fixedItems = $this->getFixedItems();
+        $createdItems = 0;
+
+        foreach (array_slice($fixedItems, 0, $nbItems) as $index => $data) {
+            $item = new Item();
+            $item
+                ->setName($data['name'])
+                ->setDescription($data['description'])
+                ->setPrice($data['price'])
+                ->setCreatedAt(new \DateTimeImmutable($data['createdAt']))
+                ->setIsSold($data['isSold'])
+                ->setImages($data['images'])
+                ->setCategory($data['category'])
+                ->setCondition($data['condition'])
+                ->setOwner($users[$index % count($users)]);
+
+            $this->em->persist($item);
+            ++$createdItems;
+        }
+
+        $remaining = $nbItems - $createdItems;
+
         $categories = ['carte', 'booster', 'display', 'autre'];
         $conditions = ['neuf', 'tres_bon', 'bon', 'correct'];
+        $imagePool = $this->getExistingImagePool();
 
-        for ($i = 1; $i <= $nbItems; $i++) {
+        for ($i = 1; $i <= $remaining; $i++) {
             $item = new Item();
             $item->setName($this->randomItemName());
-            $item->setPrice((string) (random_int(100, 50000) / 100));
+            $item->setPrice(number_format(random_int(100, 50000) / 100, 2, '.', ''));
             $item->setDescription($this->randomDescription());
             $item->setCategory($categories[array_rand($categories)]);
             $item->setCondition($conditions[array_rand($conditions)]);
-            $item->setIsSold(random_int(0, 4) === 0); // ~20 % vendus
-            $item->setImages([]);                      // pas de fichiers réels
+            $item->setIsSold(random_int(0, 4) === 0);
+            $item->setImages([$imagePool[array_rand($imagePool)]]);
             $item->setOwner($users[array_rand($users)]);
 
             $this->em->persist($item);
 
-            // Flush par lots pour économiser la mémoire
             if ($i % 50 === 0) {
                 $this->em->flush();
-                $this->em->clear(Item::class);
             }
         }
 
         $this->em->flush();
-        $io->text(sprintf('  ✓ %d article(s) créé(s)', $nbItems));
 
-        // ── Résumé ────────────────────────────────────────────────────────────
+        $io->text(sprintf('✓ %d article(s) créé(s)', $nbItems));
         $io->success('Fixtures générées avec succès !');
 
         $io->table(
-            ['', 'Valeur'],
+            ['Champ', 'Valeur'],
             [
-                ['Utilisateurs créés', $nbUsers],
-                ['Articles créés',     $nbItems],
-                ['Email',              'user1@playmate.dev … user' . $nbUsers . '@playmate.dev'],
-                ['Mot de passe',       $password],
-                ['Admin',              'user1@playmate.dev (+ ~20 % aléatoires)'],
+                ['Utilisateurs créés', (string) $nbUsers],
+                ['Articles créés', (string) $nbItems],
+                ['Articles fixes injectés', (string) min(count($fixedItems), $nbItems)],
+                ['Emails', sprintf('user1@playmate.dev à user%d@playmate.dev', $nbUsers)],
+                ['Mot de passe', $password],
+                ['Admin principal', 'user1@playmate.dev'],
+                ['Admins supplémentaires', '~20 % aléatoires'],
             ]
         );
 
         return Command::SUCCESS;
     }
 
-    // ── Données aléatoires ────────────────────────────────────────────────────
+    /**
+     * @return array<int, array{
+     *     name: string,
+     *     description: string,
+     *     price: string,
+     *     createdAt: string,
+     *     isSold: bool,
+     *     images: array<int, string>,
+     *     category: string,
+     *     condition: string
+     * }>
+     */
+    private function getFixedItems(): array
+    {
+        return [
+            [
+                'name' => 'Black Lotus - Édition Collector',
+                'description' => 'Carte mythique très recherchée, protégée sous sleeve rigide.',
+                'price' => '12500.00',
+                'createdAt' => '-1 day',
+                'isSold' => false,
+                'images' => ['/images/items/black-lotus.jpg'],
+                'category' => 'carte',
+                'condition' => 'neuf',
+            ],
+            [
+                'name' => 'Mox Emerald',
+                'description' => 'Très bel état général, parfaite pour collection haut de gamme.',
+                'price' => '4200.00',
+                'createdAt' => '-2 days',
+                'isSold' => false,
+                'images' => ['/images/items/mox-emerald.jpg'],
+                'category' => 'carte',
+                'condition' => 'tres_bon',
+            ],
+            [
+                'name' => 'Time Walk',
+                'description' => 'Carte iconique vintage, idéalement conservée.',
+                'price' => '3900.00',
+                'createdAt' => '-3 days',
+                'isSold' => false,
+                'images' => ['/images/items/time-walk.jpg'],
+                'category' => 'carte',
+                'condition' => 'tres_bon',
+            ],
+            [
+                'name' => 'Underground Sea',
+                'description' => 'Dual land indispensable pour formats éternels.',
+                'price' => '850.00',
+                'createdAt' => '-4 days',
+                'isSold' => false,
+                'images' => ['/images/items/underground-sea.jpg'],
+                'category' => 'carte',
+                'condition' => 'bon',
+            ],
+            [
+                'name' => 'Volcanic Island',
+                'description' => 'Très belle carte legacy, couleurs intenses.',
+                'price' => '790.00',
+                'createdAt' => '-5 days',
+                'isSold' => false,
+                'images' => ['/images/items/volcanic-island.jpg'],
+                'category' => 'carte',
+                'condition' => 'bon',
+            ],
+            [
+                'name' => 'Force of Will',
+                'description' => 'Staple bleu en excellent état, très recherchée.',
+                'price' => '95.00',
+                'createdAt' => '-6 days',
+                'isSold' => false,
+                'images' => ['/images/items/force-of-will.jpg'],
+                'category' => 'carte',
+                'condition' => 'tres_bon',
+            ],
+            [
+                'name' => 'Mana Drain',
+                'description' => 'Contresort premium pour collectionneur averti.',
+                'price' => '180.00',
+                'createdAt' => '-7 days',
+                'isSold' => false,
+                'images' => ['/images/items/mana-drain.jpg'],
+                'category' => 'carte',
+                'condition' => 'tres_bon',
+            ],
+            [
+                'name' => 'Demonic Tutor',
+                'description' => 'Tutor noir culte, état très propre.',
+                'price' => '210.00',
+                'createdAt' => '-8 days',
+                'isSold' => false,
+                'images' => ['/images/items/demonic-tutor.jpg'],
+                'category' => 'carte',
+                'condition' => 'tres_bon',
+            ],
+            [
+                'name' => 'Snapcaster Mage',
+                'description' => 'Classique moderne, parfait pour deck ou collection.',
+                'price' => '28.00',
+                'createdAt' => '-9 days',
+                'isSold' => false,
+                'images' => ['/images/items/snapcaster-mage.jpg'],
+                'category' => 'carte',
+                'condition' => 'bon',
+            ],
+            [
+                'name' => 'Liliana of the Veil',
+                'description' => 'Planeswalker emblématique en très bon état.',
+                'price' => '42.00',
+                'createdAt' => '-10 days',
+                'isSold' => false,
+                'images' => ['/images/items/liliana-of-the-veil.jpg'],
+                'category' => 'carte',
+                'condition' => 'bon',
+            ],
+            [
+                'name' => 'Tarmogoyf',
+                'description' => 'Créature emblématique, usure légère sur les bords.',
+                'price' => '24.00',
+                'createdAt' => '-11 days',
+                'isSold' => false,
+                'images' => ['/images/items/tarmogoyf.jpg'],
+                'category' => 'carte',
+                'condition' => 'correct',
+            ],
+            [
+                'name' => 'Jace, the Mind Sculptor',
+                'description' => 'Version très propre, idéale pour vitrine.',
+                'price' => '65.00',
+                'createdAt' => '-12 days',
+                'isSold' => true,
+                'images' => ['/images/items/jace-the-mind-sculptor.jpg'],
+                'category' => 'carte',
+                'condition' => 'tres_bon',
+            ],
+            [
+                'name' => 'Polluted Delta',
+                'description' => 'Fetch land très joué, bon état général.',
+                'price' => '18.00',
+                'createdAt' => '-13 days',
+                'isSold' => false,
+                'images' => ['/images/items/polluted-delta.jpg'],
+                'category' => 'carte',
+                'condition' => 'bon',
+            ],
+            [
+                'name' => 'Breeding Pool',
+                'description' => 'Shock land polyvalent pour plusieurs archétypes.',
+                'price' => '14.00',
+                'createdAt' => '-14 days',
+                'isSold' => true,
+                'images' => ['/images/items/breeding-pool.jpg'],
+                'category' => 'carte',
+                'condition' => 'bon',
+            ],
+        ];
+    }
 
     private function randomUsername(): string
     {
         $names = ['Trainer', 'Collector', 'Master', 'Hunter', 'Champion', 'Dealer', 'Player', 'Seeker'];
+
         return $names[array_rand($names)];
     }
 
@@ -156,8 +339,9 @@ class GenerateFixturesCommand extends Command
             'Marc',
             'Nina',
             'Oscar',
-            'Paula'
+            'Paula',
         ];
+
         return $names[array_rand($names)];
     }
 
@@ -177,8 +361,9 @@ class GenerateFixturesCommand extends Command
             'Simon',
             'Laurent',
             'Lefebvre',
-            'Michel'
+            'Michel',
         ];
+
         return $names[array_rand($names)];
     }
 
@@ -196,8 +381,9 @@ class GenerateFixturesCommand extends Command
             'Ronflex',
             'Évoli',
             'Artikodin',
-            'Electhor'
+            'Electhor',
         ];
+
         $suffixes = [
             'EX',
             'GX',
@@ -209,14 +395,19 @@ class GenerateFixturesCommand extends Command
             'Holo',
             'Reverse Holo',
             'Secret Rare',
-            'Gold'
+            'Gold',
         ];
-        $types    = ['Carte', 'Booster', 'Display', 'Coffret', 'Promo'];
+
+        $types = ['Carte', 'Booster', 'Display', 'Coffret', 'Promo'];
 
         $type = $types[array_rand($types)];
 
         if ($type === 'Carte') {
-            return sprintf('%s %s', $prefixes[array_rand($prefixes)], $suffixes[array_rand($suffixes)]);
+            return sprintf(
+                '%s %s',
+                $prefixes[array_rand($prefixes)],
+                $suffixes[array_rand($suffixes)]
+            );
         }
 
         $sets = [
@@ -226,7 +417,7 @@ class GenerateFixturesCommand extends Command
             'Paldea Evolved',
             'Crown Zenith',
             'Silver Tempest',
-            'Lost Origin'
+            'Lost Origin',
         ];
 
         return sprintf('%s %s', $type, $sets[array_rand($sets)]);
@@ -234,7 +425,6 @@ class GenerateFixturesCommand extends Command
 
     private function randomDescription(): ?string
     {
-        // ~30 % sans description
         if (random_int(1, 10) <= 3) {
             return null;
         }
@@ -256,6 +446,22 @@ class GenerateFixturesCommand extends Command
         ];
 
         return $intros[array_rand($intros)] . $extras[array_rand($extras)];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function getExistingImagePool(): array
+    {
+        $images = [];
+
+        foreach ($this->getFixedItems() as $item) {
+            foreach ($item['images'] as $image) {
+                $images[] = $image;
+            }
+        }
+
+        return array_values(array_unique($images));
     }
 
     private function randomAddress(): string
