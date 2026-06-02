@@ -172,30 +172,31 @@
                         {# ── Actions ── #}
                         <div class="show-info__actions">
 
-                    {% if not item.sold %}
-                        {# Bouton contact (à brancher selon ta logique métier) #}
-                        <a href="mailto:{{ item.owner.email }}" class="btn-contact btn btn-secondary">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                            </svg>
-                            Contacter le vendeur
-                        </a>
-                        <a href="{{ path('transaction_new', {id: item.id}) }}" class="btn-contact">
-                            Acheter
-                        </a>
-                    {% endif %}
-
-                            {# Actions propriétaire / admin #}
-                            {% if app.user and (app.user == item.owner or is_granted('ROLE_ADMIN')) %}
-                                <div class="show-info__owner-actions">
-                                    <a href="{{ path('item_edit', {id: item.id}) }}" class="btn-edit">
-                                        <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            {% if not item.sold %}
+                                <div class="show-info__actions-row">
+                                    <a href="mailto:{{ item.owner.email }}" class="btn btn-secondary btn-contact">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                                         </svg>
-                                        Modifier
+                                        Contacter
+                                    </a>
+                                    <a href="{{ path('transaction_new', {id: item.id}) }}" class="btn btn-secondary btn-achat">
+                                        <span>Acheter</span>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 12h14M13 5l7 7-7 7"/>
+                                        </svg>
                                     </a>
                                 </div>
+                            {% endif %}
+
+                            {% if app.user and (app.user == item.owner or is_granted('ROLE_ADMIN')) %}
+                                <a href="{{ path('item_edit', {id: item.id}) }}" class="btn-show-edit">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    Modifier l'annonce
+                                </a>
                             {% endif %}
 
                         </div>
