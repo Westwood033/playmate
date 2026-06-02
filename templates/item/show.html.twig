@@ -84,8 +84,8 @@
 						{% if item.images|length > 1 %}
 							<div class="show-gallery__thumbs" id="gallery-thumbs">
 								{% for img in item.images %}
-									<button type="button" class="show-gallery__thumb {% if loop.first %}show-gallery__thumb--active{% endif %}" data-src="{{ asset(img) }}" aria-label="Photo {{ loop.index }}">
-										<img src="{{ asset(img) }}" alt="Photo {{ loop.index }}">
+									<button type="button" class="show-gallery__thumb {% if loop.first %}show-gallery__thumb--active{% endif %}" data-src="{{ asset('uploads/items/' ~ img) }}" aria-label="Photo {{ loop.index }}">
+										<img src="{{ asset('uploads/items/' ~ img) }}" alt="Photo {{ loop.index }}">
 									</button>
 								{% endfor %}
 							</div>
@@ -94,8 +94,8 @@
 					</div>
 
 					{# ══════════════════════════════════════
-										    COLONNE DROITE — Infos + actions
-										 ══════════════════════════════════════ #}
+											 COLONNE DROITE — Infos + actions
+										══════════════════════════════════════ #}
 					<div
 						class="show-info">
 
@@ -144,7 +144,7 @@
 								<p class="show-info__seller-name">{{ item.owner.username }}</p>
 								<p class="show-info__seller-since">
 									Membre
-																																				                            depuis
+																																																																								                            depuis
 									{{ item.owner.createdAt is defined ? item.owner.createdAt|date('M Y') : 'N/A' }}
 								</p>
 							</div>
