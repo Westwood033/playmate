@@ -21,15 +21,68 @@
 				{% endif %}
 			</div>
 
+			<form class="tournaments-search" method="GET" action="{{ path('app_tournament_index') }}">
+
+				<div class="tournaments-search__input-wrap">
+					<svg class="tournaments-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<circle cx="11" cy="11" r="8"/>
+						<path d="m21 21-4.35-4.35"/>
+					</svg>
+					<input type="text" name="q" value="{{ filters.q }}" placeholder="Rechercher un tournoi..." class="tournaments-search__input" autocomplete="off">
+				</div>
+
+				<div class="tournaments-search__input-wrap">
+					<svg class="tournaments-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+						<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+						<circle cx="12" cy="10" r="3"/>
+					</svg>
+					<input type="text" name="city" value="{{ filters.city }}" placeholder="Ville..." class="tournaments-search__input" list="tournaments-cities" autocomplete="off">
+					<datalist id="tournaments-cities">
+						{% for city in cities %}
+							<option value="{{ city }}">
+						{% endfor %}
+					</datalist>
+				</div>
+
+				<select name="status" class="tournaments-search__select">
+					<option value="all"     {% if filters.status == 'all' %}selected{% endif %}>Tous statuts</option>
+					<option value="upcoming" {% if filters.status == 'upcoming' %}selected{% endif %}>À venir</option>
+					<option value="past"    {% if filters.status == 'past' %}selected{% endif %}>Terminés</option>
+				</select>
+
+				<label class="tournaments-search__check">
+					<input type="checkbox" name="available" value="1" {% if filters.available %}checked{% endif %}>
+					<span>Places disponibles</span>
+				</label>
+
+				<button type="submit" class="tournaments-search__btn">Filtrer</button>
+
+				{% if filters.q or filters.city or filters.status != 'all' or filters.available %}
+					<a href="{{ path('app_tournament_index') }}" class="tournaments-search__reset">✕ Réinitialiser</a>
+				{% endif %}
+			</form>
+
 			{% if tournaments is empty %}
-				<div class="items-empty">
-					<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
+				<div class="tournaments-empty">
+					<svg class="tournaments-empty__icon" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
 						<rect x="8" y="14" width="48" height="40" rx="4"/>
 						<path d="M8 24h48M20 14V8M44 14V8"/>
 					</svg>
-					<p>Aucun tournoi pour le moment.</p>
-					{% if app.user %}
-						<a href="{{ path('app_tournament_new', {id: app.user.id}) }}">Créer le premier tournoi</a>
+
+					{% if filters.q or filters.city or filters.status != 'all' or filters.available %}
+						<h3 class="tournaments-empty__title">Aucun résultat</h3>
+						<p class="tournaments-empty__text">Aucun tournoi ne correspond à vos critères de recherche.</p>
+						<a href="{{ path('app_tournament_index') }}" class="tournaments-empty__cta">
+							Réinitialiser les filtres
+						</a>
+					{% else %}
+						<h3 class="tournaments-empty__title">Aucun tournoi pour le moment</h3>
+						<p class="tournaments-empty__text">Soyez le premier à organiser un tournoi et rassemblez la communauté.</p>
+						{% if app.user %}
+							<a href="{{ path('app_tournament_new', {id: app.user.id}) }}" class="tournaments-empty__cta">
+								+ Créer un tournoi
+							</a>
+						{% endif %}
 					{% endif %}
 				</div>
 			{% else %}
