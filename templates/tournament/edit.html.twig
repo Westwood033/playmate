@@ -1,13 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Tournament{% endblock %}
+{% block title %}Playmate | Modifier le tournoi{% endblock %}
 
 {% block body %}
-    <h1>Edit Tournament</h1>
+	{% include 'header.html.twig' %}
 
-    {{ include('tournament/_form.html.twig', {'button_label': 'Update'}) }}
+	<main class="page">
+		<div class="container container-md">
+			<div class="card">
+				<div class="auth-logo">
+					<h1 class="brand-name">Playmate</h1>
+					<p>Modifier le tournoi</p>
+				</div>
 
-    <a href="{{ path('app_tournament_index') }}">back to list</a>
+				{{ include('tournament/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-    {{ include('tournament/_delete_form.html.twig') }}
+				<div class="auth-footer">
+					<a href="{{ path('app_tournament_index') }}">Retour à la liste</a>
+				</div>
+
+				{{ include('tournament/_delete_form.html.twig') }}
+			</div>
+		</div>
+	</main>
 {% endblock %}

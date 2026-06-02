@@ -24,12 +24,11 @@ final class TournamentController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_tournament_list', methods: ['GET'])]
+    #[Route('/user/{id}', name: 'app_tournament_list', methods: ['GET'])]
     public function list(User $user): Response
     {
-        
         return $this->render('tournament/index.html.twig', [
-            //'tournaments' => $user->getTournaments,
+            'tournaments' => $user->getTournaments(),
         ]);
     }
 

@@ -1,14 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('styles/item.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/upload-widget.css') }}">
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('styles/item.css') }}">
+	<link rel="stylesheet" href="{{ asset('styles/upload-widget.css') }}">
 {% endblock %}
 
 {% block title %}{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }} — Playmate{% endblock %}
 
 {% block body %}
+{% include 'header.html.twig' %}
+
+<main class="page">
+<div class="container">
 <div class="item-form-page">
 
     <div class="item-form-container">
@@ -21,114 +25,52 @@
                     </svg>
                     Retour aux articles
                 </a>
-                <h1>{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }}</h1>
-                <p>{{ editing is defined and editing ? 'Mettez à jour les informations de votre annonce.' : 'Remplissez les informations pour mettre en vente votre article.' }}</p>
-            </div>
-
-            {% for msg in app.flashes('success') %}
-                <div class="alert alert-success">{{ msg }}</div>
-            {% endfor %}
-
-            {{ form_start(form, {attr: {class: 'item-form', novalidate: 'novalidate', enctype: 'multipart/form-data'}}) }}
-
-                {# ── Nom + Prix ── #}
-                <div class="form-row">
-                    <div class="form-group">
-                        {{ form_label(form.name) }}
-                        {{ form_widget(form.name) }}
-                        {{ form_errors(form.name) }}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form_label(form.price) }}
-                        <div class="input-money-wrap">
-                            {{ form_widget(form.price) }}
-                        </div>
-                        {{ form_errors(form.price) }}
-                    </div>
-                </div>
-
-                {# ── Catégorie + État ── #}
-                <div class="form-row">
-                    <div class="form-group">
-                        {{ form_label(form.category) }}
-                        {{ form_widget(form.category) }}
-                        {{ form_errors(form.category) }}
-                    </div>
-
-                    <div class="form-group">
-                        {{ form_label(form.condition) }}
-                        {{ form_widget(form.condition) }}
-                        {{ form_errors(form.condition) }}
-                    </div>
-                </div>
-
-                {# ── Description ── #}
-                <div class="form-group form-group--full">
-                    {{ form_label(form.description) }}
-                    {{ form_widget(form.description) }}
-                    {{ form_errors(form.description) }}
-                </div>
-
-                {# ── Upload photos ── #}
-                <div class="upload-field form-group--full">
-                    <label>
-                        Photos
-                        <span class="upload-count" id="upload-count"></span>
-                    </label>
-
-                    {# Input Symfony — caché via CSS, piloté par le JS #}
-                    {{ form_widget(form.imageFiles, {
+                <h1>{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }}</h1><p>{{ editing is defined and editing ? 'Mettez à jour les informations de votre annonce.' : 'Remplissez les informations pour mettre en vente votre article.' }}</p></div>{% for msg in app.flashes('success') %}<div class="alert alert-success">{{ msg }}</div>{% endfor %}{{ form_start(form, {attr: {class: 'item-form', novalidate: 'novalidate', enctype: 'multipart/form-data'}}) }}{# ── Nom + Prix ── #}<div class="form-row"><div class="form-group">
+{{ form_label(form.name) }}
+{{ form_widget(form.name) }}
+{{ form_errors(form.name) }}</div><div class="form-group">
+{{ form_label(form.price) }}
+<div class="input-money-wrap">
+	{{ form_widget(form.price) }}
+</div>
+{{ form_errors(form.price) }}</div></div>{# ── Catégorie + État ── #}<div class="form-row"><div class="form-group">
+{{ form_label(form.category) }}
+{{ form_widget(form.category) }}
+{{ form_errors(form.category) }}</div><div class="form-group">
+{{ form_label(form.condition) }}
+{{ form_widget(form.condition) }}
+{{ form_errors(form.condition) }}</div></div>{# ── Description ── #}<div class="form-group form-group--full">{{ form_label(form.description) }}{{ form_widget(form.description) }}{{ form_errors(form.description) }}</div>{# ── Upload photos ── #}<div class="upload-field form-group--full"><label>
+Photos
+<span class="upload-count" id="upload-count"></span></label>{# Input Symfony — caché via CSS, piloté par le JS #}{{ form_widget(form.imageFiles, {
                         attr: { multiple: 'multiple', accept: 'image/jpeg,image/png,image/webp' }
-                    }) }}
-                    {{ form_errors(form.imageFiles) }}
+                    }) }}{{ form_errors(form.imageFiles) }}{# Zone de dépôt #}<div class="upload-drop-zone" id="upload-drop-zone" role="button" tabindex="0" aria-label="Zone de dépôt d'images">
+<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+	<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+	<polyline points="17 8 12 3 7 8"/>
+	<line x1="12" y1="3" x2="12" y2="15"/>
+</svg>
+<p class="upload-drop-zone__text">
+	Glissez vos photos ici ou
+	<u>parcourir</u>
+</p>
+<p class="upload-drop-zone__hint">JPG, PNG, WEBP · max 5 Mo · jusqu'à 8 photos</p></div>{# Grille de miniatures (remplie par JS pour les nouveaux fichiers) #}<div
+class="upload-preview-grid" id="upload-preview-grid">
 
-                    {# Zone de dépôt #}
-                    <div class="upload-drop-zone" id="upload-drop-zone"
-                         role="button" tabindex="0" aria-label="Zone de dépôt d'images">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                            <polyline points="17 8 12 3 7 8"/>
-                            <line x1="12" y1="3" x2="12" y2="15"/>
-                        </svg>
-                        <p class="upload-drop-zone__text">
-                            Glissez vos photos ici ou <u>parcourir</u>
-                        </p>
-                        <p class="upload-drop-zone__hint">JPG, PNG, WEBP · max 5 Mo · jusqu'à 8 photos</p>
-                    </div>
-
-                    {# Grille de miniatures (remplie par JS pour les nouveaux fichiers) #}
-                    <div class="upload-preview-grid" id="upload-preview-grid">
-
-                        {# En mode édition : images déjà sauvegardées #}
-                        {% if editing is defined and editing and item.images|length > 0 %}
-                            {% for img in item.images %}
-                                <div class="upload-thumb upload-thumb--existing {% if loop.first %}upload-thumb--cover{% endif %}"
-                                     draggable="true"
-                                     data-filename="{{ img }}">
-                                    <img src="{{ asset('uploads/items/' ~ img) }}" alt="Photo {{ loop.index }}">
-                                    <button type="button" class="upload-thumb__remove" title="Supprimer">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                                            <path d="M18 6 6 18M6 6l12 12"/>
-                                        </svg>
-                                    </button>
-                                    <span class="upload-thumb__cover">Couverture</span>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-
-                    </div>
-
-                    {# Ordre des images existantes transmis au controller (mode édition) #}
-                    {% if editing is defined and editing %}
-                        <input type="hidden" name="existing_images_order"
-                               id="existing-images-order"
-                               value="{{ item.images|json_encode }}">
-                    {% endif %}
-                </div>
-
-                <button type="submit" class="btn-item-submit">
-                    {{ editing is defined and editing ? 'Enregistrer les modifications' : 'Publier l\'article' }}
+{# En mode édition : images déjà sauvegardées #}
+{% if editing is defined and editing and item.images|length > 0 %}
+	{% for img in item.images %}
+		<div class="upload-thumb upload-thumb--existing {% if loop.first %}upload-thumb--cover{% endif %}" draggable="true" data-filename="{{ img }}">
+			<img src="{{ asset('uploads/items/' ~ img) }}" alt="Photo {{ loop.index }}">
+			<button type="button" class="upload-thumb__remove" title="Supprimer">
+				<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+					<path d="M18 6 6 18M6 6l12 12"/>
+				</svg>
+			</button>
+			<span class="upload-thumb__cover">Couverture</span>
+		</div>
+	{% endfor %}
+{% endif %}</div>{# Ordre des images existantes transmis au controller (mode édition) #}{% if editing is defined and editing %}
+<input type="hidden" name="existing_images_order" id="existing-images-order" value="{{ item.images|json_encode }}">{% endif %}</div><button type="submit" class="btn-item-submit">{{ editing is defined and editing ? 'Enregistrer les modifications' : 'Publier l\'article' }}
                 </button>
 
             {{ form_end(form) }}
@@ -137,6 +79,8 @@
     </div>
 
 </div>
+</div>
+</main>
 {% endblock %}
 
 {% block javascripts %}

@@ -39,8 +39,8 @@ services:
     container_name: mailpit
     restart: unless-stopped
     ports:
-      - "1025:1025"   # SMTP
-      - "8025:8025"   # Web UI
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI
     volumes:
       - mailpit_data:/data
     environment:
@@ -48,6 +48,7 @@ services:
 
 volumes:
   postgres_data:
+  mailpit_data:
   pgadmin_data:
   mailpit_data:
 

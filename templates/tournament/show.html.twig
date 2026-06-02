@@ -1,47 +1,222 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tournament{% endblock %}
+{% block title %}Playmate | {{ tournament.name }}{% endblock %}
 
 {% block body %}
-    <h1>Tournament</h1>
+	{% include 'header.html.twig' %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ tournament.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ tournament.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ tournament.description }}</td>
-            </tr>
-        
-            <tr>
-                <th>CreationDate</th>
-                <td>{{ tournament.creationDate ? tournament.creationDate|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>TournamentDate</th>
-                <td>{{ tournament.tournamentDate ? tournament.tournamentDate|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>ParticipantNumber</th>
-                <td>{{ tournament.participantNumber }}</td>
-            </tr>
-            <tr>
-                <th>Address</th>
-                <td>{{ tournament.address }}</td>
-            </tr>
-        </tbody>
-    </table>
+	{% set isPast = tournament.tournamentDate and tournament.tournamentDate|date('U') < 'now'|date('U') %}
+	{% set isOwner = app.user and tournament.owner == app.user %}
+	{% set isJoined = app.user and app.user in tournament.users %}
+	{% set isFull = tournament.participantNumber and tournament.users|length >= tournament.participantNumber %}
 
-    <a href="{{ path('app_tournament_index') }}">back to list</a>
+	<main class="page">
+		<div class="container">
 
-    <a href="{{ path('app_tournament_edit', {'id': tournament.id}) }}">edit</a>
+			<nav class="show-breadcrumb">
+				<a href="{{ path('app_tournament_index') }}">Tournois</a>
+				<span>›</span>
+				<span class="show-breadcrumb__current">{{ tournament.name }}</span>
+			</nav>
 
-    {{ include('tournament/_delete_form.html.twig') }}
+			{# ── Hero ── #}
+			<div class="tournament-hero">
+				<div class="tournament-hero__date">
+					{% if tournament.tournamentDate %}
+						<span class="tournament-hero__day">{{ tournament.tournamentDate|date('d') }}</span>
+						<span class="tournament-hero__month">{{ tournament.tournamentDate|date('M')|upper }}</span>
+						<span class="tournament-hero__year">{{ tournament.tournamentDate|date('Y') }}</span>
+					{% else %}
+						<span class="tournament-hero__day">--</span>
+						<span class="tournament-hero__month">N/D</span>
+					{% endif %}
+				</div>
+
+				<div class="tournament-hero__text">
+					<div class="tournament-hero__badges">
+						{% if isPast %}
+							<span class="tournament-card__badge tournament-card__badge--past">Terminé</span>
+						{% else %}
+							<span class="tournament-card__badge">À venir</span>
+						{% endif %}
+
+						{% if isFull and not isPast %}
+							<span class="tournament-card__badge tournament-card__badge--full">Complet</span>
+						{% endif %}
+					</div>
+
+					<h1 class="tournament-hero__name">{{ tournament.name }}</h1>
+
+					{% if tournament.owner %}
+						<p class="tournament-hero__owner">
+							Organisé par <strong>{{ tournament.owner.username }}</strong>
+						</p>
+					{% endif %}
+				</div>
+			</div>
+
+			{% for msg in app.flashes('success') %}
+				<div class="alert alert-success">{{ msg }}</div>
+			{% endfor %}
+
+			<div class="tournament-show-layout">
+
+				{# ════════ COLONNE PRINCIPALE ════════ #}
+				<div class="tournament-show-main">
+
+					{# Description #}
+					{% if tournament.description %}
+						<section class="tournament-show-section">
+							<h2 class="tournament-show-section__title">Description</h2>
+							<p class="tournament-show-section__text">{{ tournament.description|nl2br }}</p>
+						</section>
+					{% endif %}
+
+					{# Participants #}
+					<section class="tournament-show-section">
+						<h2 class="tournament-show-section__title">
+							Participants
+							<span class="tournament-show-section__count">
+								{{ tournament.users|length }}{% if tournament.participantNumber %} / {{ tournament.participantNumber }}{% endif %}
+							</span>
+						</h2>
+
+						{% if tournament.users|length == 0 %}
+							<p class="tournament-show-section__empty">Aucun participant inscrit pour l'instant.</p>
+						{% else %}
+							<ul class="tournament-participants">
+								{% for participant in tournament.users %}
+									<li class="tournament-participant">
+										<span class="tournament-participant__avatar">
+											{{ participant.username|first|upper }}
+										</span>
+										<span class="tournament-participant__name">{{ participant.username }}</span>
+									</li>
+								{% endfor %}
+							</ul>
+						{% endif %}
+					</section>
+
+				</div>
+
+				{# ════════ SIDEBAR ════════ #}
+				<aside class="tournament-show-sidebar">
+
+					{# Carte d'infos clés #}
+					<div class="tournament-show-card">
+						<ul class="tournament-show-info">
+							{% if tournament.tournamentDate %}
+								<li>
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<rect x="3" y="4" width="18" height="18" rx="2"/>
+										<path d="M16 2v4M8 2v4M3 10h18"/>
+									</svg>
+									<div>
+										<span class="tournament-show-info__label">Date</span>
+										<span class="tournament-show-info__value">{{ tournament.tournamentDate|date('d/m/Y') }}</span>
+									</div>
+								</li>
+							{% endif %}
+
+							{% if tournament.address %}
+								<li>
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+										<circle cx="12" cy="10" r="3"/>
+									</svg>
+									<div>
+										<span class="tournament-show-info__label">Lieu</span>
+										<span class="tournament-show-info__value">{{ tournament.address }}</span>
+									</div>
+								</li>
+							{% endif %}
+
+							<li>
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+									<circle cx="9" cy="7" r="4"/>
+									<path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+								</svg>
+								<div>
+									<span class="tournament-show-info__label">Participants</span>
+									<span class="tournament-show-info__value">
+										{{ tournament.users|length }}{% if tournament.participantNumber %} / {{ tournament.participantNumber }}{% endif %}
+									</span>
+								</div>
+							</li>
+
+							{% if tournament.creationDate %}
+								<li>
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<circle cx="12" cy="12" r="10"/>
+										<path d="M12 6v6l4 2"/>
+									</svg>
+									<div>
+										<span class="tournament-show-info__label">Créé le</span>
+										<span class="tournament-show-info__value">{{ tournament.creationDate|date('d/m/Y') }}</span>
+									</div>
+								</li>
+							{% endif %}
+						</ul>
+
+						{# Actions de participation #}
+						{% if app.user and not isPast and not isOwner %}
+							<div class="tournament-show-actions">
+								{% if isJoined %}
+									<button type="button" class="btn-tournament-joined" disabled>
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+											<polyline points="20 6 9 17 4 12"/>
+										</svg>
+										Vous êtes inscrit
+									</button>
+								{% elseif isFull %}
+									<button type="button" class="btn-tournament-full" disabled>
+										Tournoi complet
+									</button>
+								{% else %}
+									<form method="post" action="{{ path('app_tournament_user_add', {id: tournament.id, userId: app.user.id}) }}">
+										<input type="hidden" name="_token" value="{{ csrf_token('join' ~ tournament.id) }}">
+										<button type="submit" class="btn-tournament-join">
+											Rejoindre le tournoi
+										</button>
+									</form>
+								{% endif %}
+							</div>
+						{% endif %}
+					</div>
+
+					{# Actions owner #}
+					{% if isOwner %}
+						<div class="tournament-show-card">
+							<h3 class="tournament-show-card__title">Gestion</h3>
+							<div class="tournament-owner-actions">
+								<a href="{{ path('app_tournament_edit', {id: tournament.id}) }}" class="btn-tournament-show">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+										<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+										<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+									</svg>
+									Modifier
+								</a>
+
+								<form method="post" action="{{ path('app_tournament_delete', {id: tournament.id}) }}"
+								      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce tournoi ?');">
+									<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ tournament.id) }}">
+									<button type="submit" class="btn-tournament-delete">
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+											<polyline points="3 6 5 6 21 6"/>
+											<path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+										</svg>
+										Supprimer
+									</button>
+								</form>
+							</div>
+						</div>
+					{% endif %}
+
+				</aside>
+
+			</div>
+
+		</div>
+	</main>
 {% endblock %}

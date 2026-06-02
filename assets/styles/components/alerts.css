@@ -10,3 +10,15 @@
   color: #ffd2ca;
   border: 1px solid var(--color-danger-border);
 }
+
+.alert-success {
+  background-color: rgba(34, 70, 42, 0.6);
+  color: #c2e9c8;
+  border: 1px solid rgba(123, 183, 132, 0.35);
+}
+
+.alert-info {
+  background-color: rgba(40, 50, 78, 0.6);
+  color: #d9d5f5;
+  border: 1px solid rgba(110, 90, 230, 0.35);
+}
