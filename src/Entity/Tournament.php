@@ -146,6 +146,7 @@ class Tournament
 
     public function removeUser(User $user): static
     {
+        $user->removeTournament($this);
         $this->users->removeElement($user);
 
         return $this;

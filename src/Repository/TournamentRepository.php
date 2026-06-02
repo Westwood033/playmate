@@ -40,4 +40,20 @@ class TournamentRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+
+public function findAllInWeek(\DateTimeInterface $datetime): array
+{
+    $startOfWeek = (clone $datetime)->modify('monday this week')->setTime(0, 0, 0);
+    $endOfWeek = (clone $startOfWeek)->modify('+6 days')->setTime(23, 59, 59);
+
+    return $this->createQueryBuilder('t')
+        ->andWhere('t.tournamentDate BETWEEN :start AND :end')
+        ->setParameter('start', $startOfWeek)
+        ->setParameter('end', $endOfWeek)
+        ->orderBy('t.tournamentDate', 'ASC')
+        ->setMaxResults(6)
+        ->getQuery()
+        ->getResult();
+}
 }

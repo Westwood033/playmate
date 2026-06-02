@@ -126,7 +126,7 @@
 									</svg>
 									<div>
 										<span class="tournament-show-info__label">Lieu</span>
-										<span class="tournament-show-info__value">{{ tournament.address }}</span>
+										<span class="tournament-show-info__value">{{ tournament.address|replace({'|': " "}) }}</span>
 									</div>
 								</li>
 							{% endif %}
@@ -163,12 +163,12 @@
 						{% if app.user and not isPast and not isOwner %}
 							<div class="tournament-show-actions">
 								{% if isJoined %}
-									<button type="button" class="btn-tournament-joined" disabled>
-										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-											<polyline points="20 6 9 17 4 12"/>
-										</svg>
-										Vous êtes inscrit
-									</button>
+									<form method="post" action="{{ path('app_tournament_user_remove', {id: tournament.id, userId: app.user.id}) }}">
+										<input type="hidden" name="_token" value="{{ csrf_token('quit' ~ tournament.id) }}">
+										<button type="submit" class="btn-tournament-joined btn-secondary">
+											Quitter le tournoi
+										</button>
+									</form>
 								{% elseif isFull %}
 									<button type="button" class="btn-tournament-full" disabled>
 										Tournoi complet
@@ -176,7 +176,7 @@
 								{% else %}
 									<form method="post" action="{{ path('app_tournament_user_add', {id: tournament.id, userId: app.user.id}) }}">
 										<input type="hidden" name="_token" value="{{ csrf_token('join' ~ tournament.id) }}">
-										<button type="submit" class="btn-tournament-join">
+										<button type="submit" class="btn-tournament-joined btn-secondary">
 											Rejoindre le tournoi
 										</button>
 									</form>

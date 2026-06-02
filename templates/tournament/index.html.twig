@@ -21,10 +21,6 @@
 				{% endif %}
 			</div>
 
-			{% for msg in app.flashes('success') %}
-				<div class="alert alert-success">{{ msg }}</div>
-			{% endfor %}
-
 			{% if tournaments is empty %}
 				<div class="items-empty">
 					<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -52,11 +48,19 @@
 									{% endif %}
 								</div>
 
+								 <div class="container tournament-card__badge_container">
+                                {% if tournament.owner === app.user %}
+									<span class="tournament-card__badge tournament-card__badge--created">Créé par vous</span>
+								{% elseif app.user in tournament.users %}
+									<span class="tournament-card__badge tournament-card__badge--registered">inscrit</span>
+								{% endif %}
+
 								{% if isPast %}
 									<span class="tournament-card__badge tournament-card__badge--past">Terminé</span>
 								{% else %}
 									<span class="tournament-card__badge">À venir</span>
 								{% endif %}
+                                </div>
 							</div>
 
 							<h2 class="tournament-card__name">{{ tournament.name }}</h2>
@@ -72,7 +76,7 @@
 											<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
 											<circle cx="12" cy="10" r="3"/>
 										</svg>
-										<span>{{ tournament.address }}</span>
+										<span>{{ tournament.address|replace({'|': " "}) }}</span>
 									</li>
 								{% endif %}
 								<li>
@@ -115,7 +119,25 @@
 					{% endfor %}
 				</div>
 			{% endif %}
-
 		</div>
+		<div class="flash-container">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-notification flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
 	</main>
+
+	<script>
+    setTimeout(() => {
+        document.querySelectorAll('.flash-notification').forEach(el => {
+            el.style.transition = '0.5s';
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 500);
+        });
+    }, 5000);
+</script>
 {% endblock %}

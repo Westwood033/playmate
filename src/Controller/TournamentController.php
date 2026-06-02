@@ -45,7 +45,7 @@ final class TournamentController extends AbstractController
             $city = $form->get('city')->getData();
             $country = $form->get('country')->getData();
             $tournament->setCreationDate(New DateTime());
-            $tournament->setAddress($street . " " . $postalCode . " " . $city . " " . $country);
+            $tournament->setAddress($street . "|" . $postalCode . "|" . $city . "|" . $country);
             $tournament->setOwner($user);
             $entityManager->persist($tournament);
             $entityManager->flush();
@@ -81,9 +81,15 @@ final class TournamentController extends AbstractController
             return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $tournamentAdress = explode("|", $tournament->getAddress());
+
         return $this->render('tournament/edit.html.twig', [
             'tournament' => $tournament,
             'form' => $form,
+            'street' => $tournamentAdress[0],
+            'postalCode' => $tournamentAdress[1],
+            'city' => $tournamentAdress[2],
+            'country' => $tournamentAdress[3],
         ]);
     }
 
@@ -109,6 +115,25 @@ final class TournamentController extends AbstractController
 
         $tournament->addUser($user);
         $entityManager->flush();
+
+        $this->addFlash('info', 'Vous avez rejoint le tournoi : ' . $tournament->getName());
+
+        return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/user/remove/{userId}', name: 'app_tournament_user_remove', methods: ['POST'])]
+      public function RemoveUser(Request $request, Tournament $tournament, EntityManagerInterface $entityManager): Response
+    {
+        $userId = $request->get('userId');
+        $user = $entityManager->getRepository(User::class)->find($userId);
+        if (!$user) {
+            throw $this->createNotFoundException('User not found');
+        }
+
+        $tournament->removeUser($user);
+        $entityManager->flush();
+
+        $this->addFlash('info', 'Vous avez quitter le tournoi : ' . $tournament->getName());
 
         return $this->redirectToRoute('app_tournament_index', [], Response::HTTP_SEE_OTHER);
     }

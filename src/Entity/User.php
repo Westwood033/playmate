@@ -282,6 +282,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
 
+    public function removeTournament(Tournament $tournament): static
+    {
+        $this->tournaments->removeElement($tournament);
+
+        return $this;
+    }
+
     public function getShopAddress(): ?string
     {
         return $this->shopAddress;
