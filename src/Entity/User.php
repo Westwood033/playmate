@@ -74,6 +74,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?bool $shopRequest = false;
 
+    #[ORM\Column]
+    private int $wallet = 0;
+
     /**
      * @var Collection<int, Tournament>
      */
@@ -414,6 +417,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTournaments(Collection $tournaments): void
     {
         $this->tournaments = $tournaments;
+    }
+
+    public function getWallet(): int
+    {
+        return $this->wallet;
+    }
+
+    public function setWallet(int $wallet): void
+    {
+        $this->wallet = $wallet;
+    }
+
+    public function addToWallet(int $amount): void
+    {
+        $this->wallet += $amount;
+    }
+
+    public function removeFromWallet(int $amount): void
+    {
+        $this->wallet -= $amount;
     }
 
     public function __toString(): string

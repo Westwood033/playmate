@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\TransactionRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TransactionRepository::class)]
@@ -14,7 +15,7 @@ class Transaction
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $transactedAt = null;
+    private ?DateTimeImmutable $transactedAt = null;
 
     #[ORM\OneToOne(inversedBy: 'transaction', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
@@ -24,11 +25,14 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?User $buyer = null;
 
+    #[ORM\ManyToOne(inversedBy: 'transactionsSold')]
+    private ?User $seller = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $billingAddress = null;
 
-    #[ORM\Column]
-    private ?bool $sameAddress = null;
+    #[ORM\Column(nullable: false, options: ['default' => false])]
+    private bool $sameAddress = false;
 
     #[ORM\Column(length: 255)]
     private ?string $address = null;
@@ -38,12 +42,12 @@ class Transaction
         return $this->id;
     }
 
-    public function getTransactedAt(): ?\DateTimeImmutable
+    public function getTransactedAt(): ?DateTimeImmutable
     {
         return $this->transactedAt;
     }
 
-    public function setTransactedAt(\DateTimeImmutable $transactedAt): static
+    public function setTransactedAt(DateTimeImmutable $transactedAt): static
     {
         $this->transactedAt = $transactedAt;
 
@@ -106,6 +110,18 @@ class Transaction
     public function setAddress(string $address): static
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getSeller(): ?User
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(?User $seller): static
+    {
+        $this->seller = $seller;
 
         return $this;
     }

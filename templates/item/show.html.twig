@@ -38,7 +38,6 @@
             <div
                     class="show-page">
 
-                {# ── Fil d'Ariane ── #}
                 <nav class="show-breadcrumb">
                     <a href="{{ path('item_index') }}">Articles</a>
                     <span>›</span>
@@ -51,14 +50,8 @@
                     <span class="show-breadcrumb__current">{{ item.name }}</span>
                 </nav>
 
-                <div
-                        class="show-layout">
-
-                    {# ══════════════════════════════════════
-																COLONNE GAUCHE — Galerie photos
-															══════════════════════════════════════ #}
-                    <div
-                            class="show-gallery">
+                <div class="show-layout">
+                    <div class="show-gallery">
 
                         {# Image principale #}
                         <div class="show-gallery__main" id="gallery-main">
@@ -103,15 +96,9 @@
                                 {% endfor %}
                             </div>
                         {% endif %}
-
                     </div>
 
-                    {# ══════════════════════════════════════
-																 COLONNE DROITE — Infos + actions
-															══════════════════════════════════════ #}
-                    <div
-                            class="show-info">
-
+                    <div class="show-info">
                         {# Badges catégorie + état #}
                         <div class="show-info__badges">
                             {% if item.category %}
@@ -175,36 +162,48 @@
                             {% if not item.sold %}
                                 <div class="show-info__actions-row">
                                     <a href="mailto:{{ item.owner.email }}" class="btn btn-secondary btn-contact">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                                         </svg>
                                         Contacter
                                     </a>
-                                    <a href="{{ path('transaction_new', {id: item.id}) }}" class="btn btn-secondary btn-achat">
-                                        <span>Acheter</span>
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M5 12h14M13 5l7 7-7 7"/>
-                                        </svg>
-                                    </a>
+                                    {% if app.user and item.owner.id != app.user.id %}
+                                        <a href="{{ path('transaction_new', {id: item.id}) }}"
+                                           class="btn btn-secondary btn-achat">
+                                            <span>Acheter</span>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M5 12h14M13 5l7 7-7 7"/>
+                                            </svg>
+                                        </a>
+                                    {% endif %}
                                 </div>
                             {% endif %}
 
                             {% if app.user and (app.user == item.owner or is_granted('ROLE_ADMIN')) %}
                                 <a href="{{ path('item_edit', {id: item.id}) }}" class="btn-show-edit">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                         stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                     </svg>
                                     Modifier l'annonce
                                 </a>
                             {% endif %}
-
                         </div>
-
                     </div>
                 </div>
-
             </div>
+        </div>
+        <div class="flash-container">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-notification flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
         </div>
     </main>
 {% endblock %}
@@ -239,5 +238,13 @@
 
         document.addEventListener('turbo:load', initGallery);
         document.addEventListener('DOMContentLoaded', initGallery);
+
+        setTimeout(() => {
+            document.querySelectorAll('.flash-notification').forEach(el => {
+                el.style.transition = '0.5s';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 500);
+            });
+        }, 5000);
     </script>
 {% endblock %}

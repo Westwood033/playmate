@@ -8,75 +8,127 @@
 {% block title %}{{ editing is defined and editing ? 'Modifier une transaction' : 'Créer une transaction' }} — Playmate{% endblock %}
 
 {% block body %}
-<div class="transaction-form-page">
+    {% include 'header.html.twig' %}
 
-    <div class="transaction-form-container">
-        <div class="transaction-form-card">
-
-            <div class="transaction-form-header">
-                <h1>{{ editing is defined and editing ? 'Modifier la transaction' : 'Créer une transaction' }}</h1>
-                <p>{{ 'Remplissez les informations pour votre transaction.' }}</p>
-            </div>
-
-            <h1 class="show-info__title">{{ item.name }} - État : {{ item.condition }} - {{ item.price }}€</h1>
-
-            {% for msg in app.flashes('success') %}
-                <div class="alert alert-success">{{ msg }}</div>
+    <main class="page">
+        <div class="flash-container">
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-notification flash-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             {% endfor %}
+        </div>
 
-            {{ form_start(form, {attr: {class: 'transaction-form', novalidate: 'novalidate'}}) }}
+        <div class="transaction-form-page">
+            <div class="transaction-form-container">
+                <div class="transaction-form-card">
 
-                <div class="form-column">
-                    <div id="address-container" class="form-group">
-                        {{ form_label(form.address) }}
-                        {{ form_widget(form.address) }}
-                        {{ form_errors(form.address) }}
+                    <div class="transaction-form-header">
+                        <h1>{{ editing is defined and editing ? 'Modifier la transaction' : 'Créer une transaction' }}</h1>
+                        <p>{{ 'Remplissez les informations pour votre transaction.' }}</p>
                     </div>
 
-                    <div class="form-group">
-                        {{ form_label(form.sameAddress) }}
-                        {{ form_widget(form.sameAddress) }}
-                        {{ form_errors(form.sameAddress) }}
+                    <h1 class="show-info__title">{{ item.name }} - État : {{ item.condition }} - {{ item.price }}€</h1>
+
+                    {% for msg in app.flashes('success') %}
+                        <div class="alert alert-success">{{ msg }}</div>
+                    {% endfor %}
+
+                    {{ form_start(form, {attr: {class: 'transaction-form', novalidate: 'novalidate', 'data-turbo': 'false'}}) }}
+
+                    <div class="form-column">
+                        <div id="address-container" class="form-group">
+                            {{ form_label(form.address) }}
+                            {{ form_widget(form.address) }}
+                            {{ form_errors(form.address) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.sameAddress) }}
+                            {{ form_widget(form.sameAddress) }}
+                            {{ form_errors(form.sameAddress) }}
+                        </div>
+                        <div id="billing-address-container" class="form-group">
+                            {{ form_label(form.billingAddress) }}
+                            {{ form_widget(form.billingAddress) }}
+                            {{ form_errors(form.billingAddress) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.paymentMethod) }}
+                            {{ form_widget(form.paymentMethod) }}
+                            {{ form_errors(form.paymentMethod) }}
+                        </div>
                     </div>
-                    <div id="billing-address-container" class="form-group">
-                        {{ form_label(form.billingAddress) }}
-                        {{ form_widget(form.billingAddress) }}
-                        {{ form_errors(form.billingAddress) }}
-                    </div>
+
+                    <button type="submit" class="btn-transaction-submit">
+                        {{ editing is defined and editing ? 'Modifier la transaction' : 'Créer la transaction' }}
+                    </button>
+
+                    {{ form_end(form) }}
 
                 </div>
-
-                <button type="submit" class="btn-transaction-submit">
-                    {{ editing is defined and editing ? 'Modifier la transaction' : 'Créer la transaction' }}
-                </button>
-
-            {{ form_end(form) }}
-
+            </div>
         </div>
-    </div>
-
-</div>
+    </main>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        function initTransactionForm() {
             const sameAddressCheckbox = document.getElementById('{{ form.sameAddress.vars.id }}');
             const billingAddressContainer = document.getElementById('billing-address-container');
             const addressContainer = document.getElementById('address-container');
+            const form = document.querySelector('form.transaction-form');
 
-            function toggleBillingAddress() {
-                billingAddressContainer.style.display = sameAddressCheckbox.checked ? 'none' : 'block';
-                const billingAddressInput = billingAddressContainer.querySelector('input, textarea, select');
-                const addressInput = addressContainer.querySelector('input, textarea, select');
-                billingAddressInput.value = sameAddressCheckbox.checked ? addressInput.value : "";
+            if (!sameAddressCheckbox || !billingAddressContainer || !addressContainer) {
+                return;
             }
 
-            sameAddressCheckbox.addEventListener('change', toggleBillingAddress);
+            function toggleBillingAddress() {
+                const addressInput = addressContainer.querySelector('input, textarea, select');
+                const billingInput = billingAddressContainer.querySelector('input, textarea, select');
 
-            // Initial state
+                if (!addressInput || !billingInput) return;
+
+                if (sameAddressCheckbox.checked) {
+                    billingAddressContainer.style.display = 'none';
+                    billingInput.value = addressInput.value;
+                } else {
+                    billingAddressContainer.style.display = 'block';
+                }
+            }
+
+            sameAddressCheckbox.removeEventListener('change', toggleBillingAddress);
+            sameAddressCheckbox.addEventListener('change', toggleBillingAddress);
             toggleBillingAddress();
-        });
+
+            if (!form) return;
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                try {
+                    const res = await fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form)
+                    });
+
+                    const data = await res.json();
+
+                    if (data && data.url) {
+                        window.location.href = data.url;
+                    }
+
+                } catch (err) {
+                    console.error('Stripe submit error:', err);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initTransactionForm);
+        document.addEventListener('turbo:load', initTransactionForm);
     </script>
 {% endblock %}

@@ -22,7 +22,7 @@ class ItemRepository extends ServiceEntityRepository
      * @param array{q?: string, category?: string, condition?: string, sold?: string} $filters
      * @return Item[]
      */
-    public function search(array $filters): array
+    public function search(array $filters, bool $withSold): array
     {
         $qb = $this->createQueryBuilder('i')
             ->leftJoin('i.owner', 'u')

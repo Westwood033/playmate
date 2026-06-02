@@ -73,7 +73,7 @@
 
 						<button type="submit" class="search-bar__btn">Filtrer</button>
 					</div>
-					{% if filters.q or filters.category or filters.condition or filters.sold != '' %}
+					{% if filters.q or filters.category or filters.condition or filters.sold != '0' %}
 						<a href="{{ path('item_index') }}" class="search-bar__reset">✕ Réinitialiser</a>
 					{% endif %}
 				</form>

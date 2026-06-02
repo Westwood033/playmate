@@ -30,11 +30,11 @@ class ItemController extends AbstractController
             'q' => $request->query->get('q', ''),
             'category' => $request->query->get('category', ''),
             'condition' => $request->query->get('condition', ''),
-            'sold' => $request->query->get('sold', ''),
+            'sold' => $request->query->get('sold', '0'),
         ];
 
         return $this->render('item/index.html.twig', [
-            'items' => $repo->search($filters),
+            'items' => $repo->search($filters, false),
             'filters' => $filters,
         ]);
     }

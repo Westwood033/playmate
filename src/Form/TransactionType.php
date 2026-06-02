@@ -30,7 +30,16 @@ class TransactionType extends AbstractType
                 [
                     'label' => 'L\'adresse de facturation et la même que l\'adresse de livraison',
                 ]
-            );
+            )
+            ->add('paymentMethod', ChoiceType::class, [
+                'mapped' => false,
+                'label' => 'Paiement',
+                'expanded' => true,
+                'choices' => [
+                    'Wallet' => 'wallet',
+                    'Carte bancaire' => 'stripe',
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
