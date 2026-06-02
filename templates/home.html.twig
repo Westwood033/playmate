@@ -7,6 +7,8 @@
 
     <main class="page">
         <div class="container">
+
+            {# ================= TOURNAMENTS ================= #}
             <section class="mb-8">
                 <div class="card">
                     <div class="mb-4">
@@ -18,14 +20,15 @@
                             {% for tournament in tournaments %}
                                 <article class="panel">
                                     <h3 class="mb-2">{{ tournament.name }}</h3>
-                                    <p class="text-muted small mb-2">
-                                        {{ tournament.game ?? 'Jeu non précisé' }}
-                                    </p>
+
                                     <p class="small mb-1">
-                                        <strong>Date :</strong> {{ tournament.date ? tournament.date|date('d/m/Y H:i') : 'À confirmer' }}
+                                        <strong>Date :</strong>
+                                        {{ tournament.tournamentDate ? tournament.tournamentDate|date('d/m/Y H:i') : 'À confirmer' }}
                                     </p>
+
                                     <p class="small mb-0">
-                                        <strong>Lieu :</strong> {{ tournament.location ?? 'Lieu non précisé' }}
+                                        <strong>Lieu :</strong>
+                                        {{ tournament.address ?? 'Lieu non précisé' }}
                                     </p>
                                 </article>
                             {% endfor %}
@@ -37,6 +40,8 @@
             </section>
 
             <div class="grid" style="grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr); align-items: start;">
+
+                {# ================= NEWS ================= #}
                 <section class="stack-lg">
                     <div class="card">
                         <div class="mb-4">
@@ -71,116 +76,188 @@
                     </div>
                 </section>
 
+                {# ================= SIDEBAR ================= #}
                 <aside class="stack-lg">
-                    <section class="card">
-						<div class="mb-4">
-							<h2 class="section-title">Dernières cartes en vente</h2>
-						</div>
 
-						{% if latestItems is defined and latestItems|length > 0 %}
-							<div id="latest-items-carousel" class="carousel slide" data-bs-interval="false">
-								<div class="carousel-inner">
-									{% for item in latestItems %}
-										{% set image = item.images|length ? item.images[0] : '/images/items/placeholder.jpg' %}
-
-										<div class="carousel-item {% if loop.first %}active{% endif %}">
-											<div class="carousel-card-wrap">
-												<article class="market-card">
-													<div class="market-card__image-wrap">
-														<img
-															src="{{ asset(image) }}"
-															alt="{{ item.name }}"
-															class="market-card__image"
-														>
-													</div>
-
-													<div class="market-card__content">
-														<h3 class="market-card__title">{{ item.name }}</h3>
-														<p class="market-card__description">{{ item.description }}</p>
-														<p class="market-card__price">{{ item.price }} €</p>
-													</div>
-												</article>
-											</div>
-										</div>
-									{% endfor %}
-								</div>
-
-								{% if latestItems|length > 1 %}
-									<div class="carousel-nav-row">
-										<button
-											class="carousel-nav carousel-nav--prev"
-											type="button"
-											data-bs-target="#latest-items-carousel"
-											data-bs-slide="prev"
-											aria-label="Carte précédente"
-										>
-											<span class="carousel-nav__icon" aria-hidden="true">‹</span>
-										</button>
-
-										<button
-											class="carousel-nav carousel-nav--next"
-											type="button"
-											data-bs-target="#latest-items-carousel"
-											data-bs-slide="next"
-											aria-label="Carte suivante"
-										>
-											<span class="carousel-nav__icon" aria-hidden="true">›</span>
-										</button>
-									</div>
-								{% endif %}
-							</div>
-						{% else %}
-							<p class="text-muted">Aucune carte en vente récemment.</p>
-						{% endif %}
-					</section>
-
+                    {# ================= CAROUSEL ================= #}
                     <section class="card">
                         <div class="mb-4">
+                            <h2 class="section-title">Dernières cartes en vente</h2>
+                        </div>
+
+                        {% if latestItems is defined and latestItems|length > 0 %}
+                            <div id="latest-items-carousel" class="carousel slide" data-bs-interval="false">
+                                <div class="carousel-inner">
+                                    {% for item in latestItems %}
+                                        {% set image = item.images|length ? item.images[0] : '/images/items/placeholder.jpg' %}
+
+                                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                            <div class="carousel-card-wrap">
+                                                <article class="market-card">
+                                                    <div class="market-card__image-wrap">
+                                                        <img src="{{ asset(image) }}" alt="{{ item.name }}" class="market-card__image">
+                                                    </div>
+
+                                                    <div class="market-card__content">
+                                                        <h3 class="market-card__title">{{ item.name }}</h3>
+                                                        <p class="market-card__description">{{ item.description }}</p>
+                                                        <p class="market-card__price">{{ item.price }} €</p>
+                                                    </div>
+                                                </article>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <p class="text-muted">Aucune carte en vente récemment.</p>
+                        {% endif %}
+                    </section>
+
+                    {# ================= CALENDRIER ================= #}
+                    <section class="card">
+
+                        <div class="mb-4">
                             <h2 class="section-title">Calendrier des événements</h2>
+
+                            <div class="calendar-header">
+                                <button type="button" class="calendar-nav" id="prev">‹</button>
+                                <h3 class="calendar-title" id="calendarTitle"></h3>
+                                <button type="button" class="calendar-nav" id="next">›</button>
+                            </div>
                         </div>
 
                         <div class="calendar-wrapper">
-							<div class="calendar-grid">
-								{% set days = ['L', 'M', 'M', 'J', 'V', 'S', 'D'] %}
-								{% for day in days %}
-									<div class="calendar-weekday">{{ day }}</div>
-								{% endfor %}
+                            <div class="calendar-grid">
 
-								{% for dayNumber in 1..31 %}
-									{% set hasEvent = eventDays is defined and dayNumber in eventDays %}
-									{% set isToday = currentDay is defined and dayNumber == currentDay %}
+                                <div class="calendar-weekday">L</div>
+                                <div class="calendar-weekday">M</div>
+                                <div class="calendar-weekday">M</div>
+                                <div class="calendar-weekday">J</div>
+                                <div class="calendar-weekday">V</div>
+                                <div class="calendar-weekday">S</div>
+                                <div class="calendar-weekday">D</div>
 
-									<div class="
-										calendar-day
-										{% if hasEvent %} calendar-day--event{% endif %}
-										{% if isToday %} calendar-day--today{% endif %}
-									">
-										{{ dayNumber }}
-									</div>
-								{% endfor %}
-							</div>
-						</div>
+                                <div id="calendarDays" style="display: contents;"></div>
 
-                        {% if upcomingEvents is defined and upcomingEvents|length > 0 %}
-                            <div class="stack mt-4">
-                                {% for event in upcomingEvents %}
-                                    <article class="panel">
-                                        <h3 class="small mb-1">{{ event.title }}</h3>
-                                        <p class="small text-muted mb-1">
-                                            {{ event.date ? event.date|date('d/m/Y H:i') : 'Date à confirmer' }}
-                                        </p>
-                                        <p class="small text-muted">
-                                            {{ event.location ?? 'Lieu non précisé' }}
-                                        </p>
-                                    </article>
-                                {% endfor %}
                             </div>
-                        {% else %}
-                            <p class="text-muted mt-4">Aucun événement à venir.</p>
-                        {% endif %}
+                        </div>
+
                     </section>
+
                 </aside>
             </div>
         </div>
     </main>
+
+   {# ================= DATA TOURNOIS ================= #}
+<script>
+/* =========================
+   DONNÉES TOURNAMENTS
+========================= */
+const tournaments = [
+    {% for tournament in tournaments %}
+        {
+            id: {{ tournament.id }},
+            date: "{{ tournament.tournamentDate ? tournament.tournamentDate|date('Y-m-d') : '' }}",
+            name: "{{ tournament.name|e('js') }}"
+        },
+    {% endfor %}
+];
+
+/* map : date => tournoi */
+const tournamentMap = {};
+
+tournaments.forEach(t => {
+    if (t.date) {
+        tournamentMap[t.date] = t;
+    }
+});
+
+/* =========================
+   CALENDRIER
+========================= */
+let date = new Date();
+
+const months = [
+    "Janvier","Février","Mars","Avril","Mai","Juin",
+    "Juillet","Août","Septembre","Octobre","Novembre","Décembre"
+];
+
+function renderCalendar() {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    // titre mois + année
+    document.getElementById("calendarTitle").innerText =
+        months[month] + " " + year;
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let html = "";
+
+    // correction pour commencer lundi
+    let start = firstDay === 0 ? 6 : firstDay - 1;
+
+    // cases vides avant le 1er jour
+    for (let i = 0; i < start; i++) {
+        html += `<div></div>`;
+    }
+
+    // jours du mois
+    for (let d = 1; d <= daysInMonth; d++) {
+
+        const dayStr =
+            year + "-" +
+            String(month + 1).padStart(2, "0") + "-" +
+            String(d).padStart(2, "0");
+
+        const tournament = tournamentMap[dayStr];
+
+        html += `
+            <div class="calendar-day ${tournament ? 'calendar-day--tournament' : ''}"
+                 data-id="${tournament ? tournament.id : ''}"
+                 title="${tournament ? tournament.name : ''}">
+                ${d}
+            </div>
+        `;
+    }
+
+    document.getElementById("calendarDays").innerHTML = html;
+}
+
+/* =========================
+   NAVIGATION MOIS
+========================= */
+document.getElementById("prev").addEventListener("click", () => {
+    date.setMonth(date.getMonth() - 1);
+    renderCalendar();
+});
+
+document.getElementById("next").addEventListener("click", () => {
+    date.setMonth(date.getMonth() + 1);
+    renderCalendar();
+});
+
+/* =========================
+   CLICK → REDIRECTION
+========================= */
+document.addEventListener("click", function (e) {
+    const day = e.target.closest(".calendar-day");
+    if (!day) return;
+
+    const id = day.dataset.id;
+
+    if (id) {
+        window.location.href = "/tournament/" + id;
+    }
+});
+
+/* =========================
+   INIT
+========================= */
+renderCalendar();
+</script>
+
 {% endblock %}

@@ -49,6 +49,7 @@ services:
 volumes:
   postgres_data:
   pgadmin_data:
+  mailpit_data:
 
 networks:
   db_network:

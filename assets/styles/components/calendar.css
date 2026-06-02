@@ -72,3 +72,44 @@
   border-radius: 18px;
   padding: 1.25rem;
 }
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.calendar-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    flex: 1;
+}
+
+.calendar-nav {
+    font-size: 28px;
+    text-decoration: none;
+    padding: 5px 12px;
+    cursor: pointer;
+    user-select: none;
+       color: inherit;
+}
+
+.calendar-nav:hover {
+    color: #000;
+}
+
+.calendar-day--tournament {
+    background:
+        linear-gradient(180deg, rgba(255, 216, 168, 0.95), rgba(255, 183, 67, 0.85)),
+        linear-gradient(180deg, rgba(58, 47, 37, 0.96), rgba(36, 29, 24, 0.98));
+    
+    border: 1px solid #ffb347;
+    color: #3a2400;
+    font-weight: 700;
+    box-shadow:
+        0 0 0 1px rgba(255, 179, 71, 0.25),
+        0 8px 18px rgba(0, 0, 0, 0.25);
+}
