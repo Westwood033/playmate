@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact — Playmate
+{% endblock %}
+
+{% block body %}
+	{% include 'header.html.twig' %}
+
+	<main class="page">
+		<div class="container">
+			<section class="card" style="max-width: 860px; margin: 0 auto;">
+				<div class="mb-4">
+					<h1 class="section-title">Contact</h1>
+				</div>
+
+				<div class="stack-lg">
+					<p class="text-muted">
+						Pour toute question concernant la plateforme, les tournois, les ventes ou votre compte, vous pouvez nous contacter à l’adresse suivante :
+					</p>
+
+					<p>
+						<a href="mailto:contact@playmate.fr">contact@playmate.fr</a>
+					</p>
+
+					<p class="text-muted">
+						Pour toute réclamation, nous faisons au mieux pour répondre rapidement sous cinq à dix ans.
+					</p>
+				</div>
+
+				<div class="mt-6" style="margin-top: 2rem;">
+					<img src="{{ asset('uploads/avatars/patrick-balkany-6a1ea74cb16ca.jpg') }}" alt="Illustration de contact Playmate" style="width: 30%; max-width: 720px; margin: 0 auto; display: block; border-radius: 16px;">
+				</div>
+
+			</section>
+		</div>
+	</main>
+{% endblock %}

@@ -17,10 +17,24 @@ use App\Entity\User;
 final class TournamentController extends AbstractController
 {
     #[Route(name: 'app_tournament_index', methods: ['GET'])]
-    public function index(TournamentRepository $tournamentRepository): Response
+    public function index(Request $request, TournamentRepository $tournamentRepository): Response
     {
+        $filters = [
+            'q' => trim((string) $request->query->get('q', '')),
+            'city' => trim((string) $request->query->get('city', '')),
+            'status' => (string) $request->query->get('status', 'all'),
+            'available' => $request->query->get('available') !== null,
+        ];
+
         return $this->render('tournament/index.html.twig', [
-            'tournaments' => $tournamentRepository->findAll(),
+            'tournaments' => $tournamentRepository->findFiltered(
+                $filters['q'],
+                $filters['city'],
+                $filters['status'],
+                $filters['available']
+            ),
+            'cities' => $tournamentRepository->findDistinctCities(),
+            'filters' => $filters,
         ]);
     }
 

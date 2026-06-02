@@ -1,0 +1,19 @@
+<footer class="site-footer">
+	<div class="container">
+		<div class="site-footer-inner">
+			<p class="site-footer__brand">
+				©
+				{{ 'now'|date('Y') }}
+				Playmate
+			</p>
+
+			<nav class="site-footer__nav" aria-label="Liens de pied de page">
+			{% if 'ROLE_SHOP' not in app.user.roles %}
+				<a href="{{ path('app_shop_request') }}">Devenir boutique</a>
+			{% endif %}
+				<a href="{{ path('app_contact') }}">Contact</a>
+				<a href="{{ path('app_cgu') }}">CGU</a>
+			</nav>
+		</div>
+	</div>
+</footer>
