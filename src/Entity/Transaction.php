@@ -25,7 +25,12 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?User $buyer = null;
 
+<<<<<<< HEAD
     #[ORM\ManyToOne(inversedBy: 'transactionsSold')]
+=======
+    #[ORM\ManyToOne(inversedBy: 'transactions')]
+    #[ORM\JoinColumn(nullable: false)]
+>>>>>>> historique_achats
     private ?User $seller = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -35,7 +40,10 @@ class Transaction
     private bool $sameAddress = false;
 
     #[ORM\Column(length: 255)]
-    private ?string $address = null;
+    private ?string $buyerAddress = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $sellerAddress = null;
 
     public function getId(): ?int
     {
@@ -78,6 +86,18 @@ class Transaction
         return $this;
     }
 
+    public function getSeller(): ?User
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(?User $seller): static
+    {
+        $this->seller = $seller;
+
+        return $this;
+    }
+
     public function getBillingAddress(): ?string
     {
         return $this->billingAddress;
@@ -102,14 +122,26 @@ class Transaction
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getBuyerAddress(): ?string
     {
-        return $this->address;
+        return $this->buyerAddress;
     }
 
-    public function setAddress(string $address): static
+    public function setBuyerAddress(string $address): static
     {
-        $this->address = $address;
+        $this->buyerAddress = $address;
+
+        return $this;
+    }
+
+    public function getSellerAddress(): ?string
+    {
+        return $this->sellerAddress;
+    }
+
+    public function setSellerAddress(string $address): static
+    {
+        $this->sellerAddress = $address;
 
         return $this;
     }

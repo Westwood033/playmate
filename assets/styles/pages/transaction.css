@@ -1,0 +1,123 @@
+.transactions-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.transactions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+.transaction-card {
+  position: relative;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(183, 144, 84, 0.18);
+  background: linear-gradient(180deg, rgba(34, 25, 19, 0.92) 0%, rgba(20, 14, 10, 0.96) 100%);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.transaction-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(214, 180, 116, 0.38);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
+  text-decoration: none;
+}
+
+.transaction-card:focus-visible {
+  outline: 2px solid rgba(214, 180, 116, 0.7);
+  outline-offset: 3px;
+}
+
+.transaction-card--sold {
+  border-color: rgba(126, 91, 91, 0.35);
+  background: linear-gradient(180deg, rgba(39, 26, 26, 0.94) 0%, rgba(24, 16, 16, 0.98) 100%);
+}
+
+.transaction-card--sold::after {
+  content: "Vendu";
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 0.3rem 0.65rem;
+  border-radius: 999px;
+  background: rgba(155, 66, 66, 0.18);
+  border: 1px solid rgba(196, 106, 106, 0.24);
+  color: #f4c7c7;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.transaction-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.25rem;
+}
+
+.transaction-card__name {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  color: #f3dfb6;
+  font-weight: 700;
+}
+
+.transaction-card__price,
+.transaction-card__address,
+.transaction-card__seller {
+  margin: 0;
+  font-size: 0.96rem;
+  line-height: 1.5;
+  color: rgba(244, 233, 210, 0.84);
+}
+
+.transaction-card__price {
+  color: #e9c67a;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.transaction-card__address,
+.transaction-card__seller {
+  padding-top: 0.15rem;
+  border-top: 1px solid rgba(183, 144, 84, 0.08);
+}
+
+.transaction-card__address strong,
+.transaction-card__seller strong {
+  color: #d9c39a;
+}
+
+@media (max-width: 640px) {
+  .transactions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .transaction-card__body {
+    padding: 1rem;
+  }
+
+  .transaction-card__name {
+    font-size: 1rem;
+  }
+
+  .transaction-card__price,
+  .transaction-card__address,
+  .transaction-card__seller {
+    font-size: 0.92rem;
+  }
+}

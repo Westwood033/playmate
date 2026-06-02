@@ -1,134 +1,149 @@
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('styles/transaction.css') }}">
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('styles/transaction.css') }}">
 {% endblock %}
 
-{% block title %}{{ editing is defined and editing ? 'Modifier une transaction' : 'Créer une transaction' }} — Playmate{% endblock %}
+{% block title %}
+	{{ editing is defined and editing ? 'Modifier une transaction' : 'Créer une transaction' }}
+	— Playmate
+{% endblock %}
 
 {% block body %}
-    {% include 'header.html.twig' %}
+	{% include 'header.html.twig' %}
 
-    <main class="page">
-        <div class="flash-container">
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="flash-notification flash-{{ label }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        </div>
+	<main class="page">
+		<div class="flash-container">
+			{% for label, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="flash-notification flash-{{ label }}">
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endfor %}
+		</div>
 
-        <div class="transaction-form-page">
-            <div class="transaction-form-container">
-                <div class="transaction-form-card">
+		<div class="transaction-form-page">
+			<div class="transaction-form-container">
+				<div class="transaction-form-card">
+					<div class="transaction-form-page">
 
-                    <div class="transaction-form-header">
-                        <h1>{{ editing is defined and editing ? 'Modifier la transaction' : 'Créer une transaction' }}</h1>
-                        <p>{{ 'Remplissez les informations pour votre transaction.' }}</p>
-                    </div>
+						<div class="transaction-form-container">
+							<div class="transaction-form-card">
 
-                    <h1 class="show-info__title">{{ item.name }} - État : {{ item.condition }} - {{ item.price }}€</h1>
+								<div class="transaction-form-header">
+									<h1>{{ editing is defined and editing ? 'Modifier la transaction' : 'Créer une transaction' }}</h1>
+									<p>{{ 'Remplissez les informations pour votre transaction.' }}</p>
+								</div>
 
-                    {% for msg in app.flashes('success') %}
-                        <div class="alert alert-success">{{ msg }}</div>
-                    {% endfor %}
+								<h1 class="show-info__title">{{ item.name }}
+									- État :
+									{{ item.condition }}
+									-
+									{{ item.price }}€</h1>
 
-                    {{ form_start(form, {attr: {class: 'transaction-form', novalidate: 'novalidate', 'data-turbo': 'false'}}) }}
+								{% for msg in app.flashes('success') %}
+									<div class="alert alert-success">{{ msg }}</div>
+								{% endfor %}
 
-                    <div class="form-column">
-                        <div id="address-container" class="form-group">
-                            {{ form_label(form.address) }}
-                            {{ form_widget(form.address) }}
-                            {{ form_errors(form.address) }}
-                        </div>
+								{{ form_start(form, {attr: {class: 'transaction-form', novalidate: 'novalidate', 'data-turbo': 'false'}}) }}
 
-                        <div class="form-group">
-                            {{ form_label(form.sameAddress) }}
-                            {{ form_widget(form.sameAddress) }}
-                            {{ form_errors(form.sameAddress) }}
-                        </div>
-                        <div id="billing-address-container" class="form-group">
-                            {{ form_label(form.billingAddress) }}
-                            {{ form_widget(form.billingAddress) }}
-                            {{ form_errors(form.billingAddress) }}
-                        </div>
-                        <div class="form-group">
-                            {{ form_label(form.paymentMethod) }}
-                            {{ form_widget(form.paymentMethod) }}
-                            {{ form_errors(form.paymentMethod) }}
-                        </div>
-                    </div>
+								<div class="form-column">
+									<div id="address-container" class="form-group">
+										{{ form_label(form.address) }}
+										{{ form_widget(form.address) }}
+										{{ form_errors(form.address) }}
+									</div>
 
-                    <button type="submit" class="btn-transaction-submit">
-                        {{ editing is defined and editing ? 'Modifier la transaction' : 'Créer la transaction' }}
-                    </button>
+									<div class="form-group">
+										{{ form_label(form.sameAddress) }}
+										{{ form_widget(form.sameAddress) }}
+										{{ form_errors(form.sameAddress) }}
+									</div>
+									<div id="billing-address-container" class="form-group">
+										{{ form_label(form.billingAddress) }}
+										{{ form_widget(form.billingAddress) }}
+										{{ form_errors(form.billingAddress) }}
+									</div>
+									<div class="form-group">
+										{{ form_label(form.paymentMethod) }}
+										{{ form_widget(form.paymentMethod) }}
+										{{ form_errors(form.paymentMethod) }}
+									</div>
+								</div>
 
-                    {{ form_end(form) }}
+								<button type="submit" class="btn-transaction-submit">
+									{{ editing is defined and editing ? 'Modifier la transaction' : 'Créer la transaction' }}
+								</button>
 
-                </div>
-            </div>
-        </div>
-    </main>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
+								{{ form_end(form) }}
 
-    <script>
-        function initTransactionForm() {
-            const sameAddressCheckbox = document.getElementById('{{ form.sameAddress.vars.id }}');
-            const billingAddressContainer = document.getElementById('billing-address-container');
-            const addressContainer = document.getElementById('address-container');
-            const form = document.querySelector('form.transaction-form');
+							</div>
+						</div>
+					</div>
+				</main>
+			{% endblock %}
+			{% block javascripts %}
+				{{ parent() }}
 
-            if (!sameAddressCheckbox || !billingAddressContainer || !addressContainer) {
-                return;
-            }
+				<script>
+					function initTransactionForm() {
+const sameAddressCheckbox = document.getElementById('{{ form.sameAddress.vars.id }}');
+const billingAddressContainer = document.getElementById('billing-address-container');
+const addressContainer = document.getElementById('address-container');
+const form = document.querySelector('form.transaction-form');
 
-            function toggleBillingAddress() {
-                const addressInput = addressContainer.querySelector('input, textarea, select');
-                const billingInput = billingAddressContainer.querySelector('input, textarea, select');
+if (! sameAddressCheckbox || ! billingAddressContainer || ! addressContainer) {
+return;
+}
 
-                if (!addressInput || !billingInput) return;
+function toggleBillingAddress() {
+const addressInput = addressContainer.querySelector('input, textarea, select');
+const billingInput = billingAddressContainer.querySelector('input, textarea, select');
 
-                if (sameAddressCheckbox.checked) {
-                    billingAddressContainer.style.display = 'none';
-                    billingInput.value = addressInput.value;
-                } else {
-                    billingAddressContainer.style.display = 'block';
-                }
-            }
+if (! addressInput || ! billingInput) 
+return;
 
-            sameAddressCheckbox.removeEventListener('change', toggleBillingAddress);
-            sameAddressCheckbox.addEventListener('change', toggleBillingAddress);
-            toggleBillingAddress();
 
-            if (!form) return;
+if (sameAddressCheckbox.checked) {
+billingAddressContainer.style.display = 'none';
+billingInput.value = addressInput.value;
+} else {
+billingAddressContainer.style.display = 'block';
+}
+}
 
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
+sameAddressCheckbox.removeEventListener('change', toggleBillingAddress);
+sameAddressCheckbox.addEventListener('change', toggleBillingAddress);
+toggleBillingAddress();
 
-                try {
-                    const res = await fetch(form.action, {
-                        method: 'POST',
-                        body: new FormData(form)
-                    });
+if (! form) 
+return;
 
-                    const data = await res.json();
 
-                    if (data && data.url) {
-                        window.location.href = data.url;
-                    }
+form.addEventListener('submit', async (e) => {
+e.preventDefault();
 
-                } catch (err) {
-                    console.error('Stripe submit error:', err);
-                }
-            });
-        }
+try {
+const res = await fetch(form.action, {
+method: 'POST',
+body: new FormData(form)
+});
 
-        document.addEventListener('DOMContentLoaded', initTransactionForm);
-        document.addEventListener('turbo:load', initTransactionForm);
-    </script>
-{% endblock %}
+const data = await res.json();
+
+if (data && data.url) {
+window.location.href = data.url;
+}
+
+} catch (err) {
+console.error('Stripe submit error:', err);
+}
+});
+}
+
+document.addEventListener('DOMContentLoaded', initTransactionForm);
+document.addEventListener('turbo:load', initTransactionForm);
+				</script>
+			{% endblock %}

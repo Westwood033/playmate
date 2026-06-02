@@ -6,6 +6,7 @@ use App\Entity\Item;
 use App\Entity\Transaction;
 use App\Entity\User;
 use App\Form\TransactionType;
+use App\Repository\TransactionRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
@@ -36,6 +37,7 @@ final class TransactionController extends AbstractController
      * @throws ApiErrorException
      * @throws TransportExceptionInterface
      */
+
     #[Route('/new/{id}', name: 'transaction_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function new(
@@ -78,6 +80,16 @@ final class TransactionController extends AbstractController
 
             $this->handleSale($transaction, $item, $buyer, $seller, $price, $addresses);
 
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User */
+            $user = $this->getUser();
+            $transaction->setBuyer($user);
+            $transaction->setTransactedAt(new DateTimeImmutable());
+            $transaction->setItem($item);
+            $transaction->setSeller($item->getOwner());
+            $transaction->setSellerAddress($item->getOwner()->getAddress());
+            $item->setIsSold(true);
+            $user->addItem($item);
             $em->persist($transaction);
             $em->flush();
 
@@ -251,5 +263,14 @@ final class TransactionController extends AbstractController
             ]);
 
         $this->mailer->send($email);
+    }
+
+    #[Route('/history/{id}', name: 'transaction_history', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[IsGranted('ROLE_USER')]
+    public function history(TransactionRepository $repo): Response
+    {
+        return $this->render('transaction/history/index.html.twig', [
+            'transactions' => $repo->findAll(),
+        ]);
     }
 }
