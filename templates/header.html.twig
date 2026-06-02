@@ -10,6 +10,12 @@
 
 			{% if app.user %}
 				<nav class="nav">
+					{% if 'ROLE_ADMIN' in app.user.roles %}
+						<a href="{{ path('admin') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
+							Administration
+						</a>
+					{% endif %}
+
 					{% if 'ROLE_SHOP' in app.user.roles %}
 						<a href="{{ path('item_index') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
 							Ma Boutique
