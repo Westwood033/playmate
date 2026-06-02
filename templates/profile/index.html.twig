@@ -1,0 +1,122 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon profil — Playmate
+{% endblock %}
+
+{% block body %}
+	{% include 'header.html.twig' %}
+
+	<main class="page">
+		<div class="container">
+			<div class="profile-page">
+				<div class="profile-layout">
+					<aside class="profile-sidebar">
+						<div class="profile-hero">
+							{% if user.avatar %}
+								<div class="profile-avatar">
+									<img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="Avatar de {{ user.username }}">
+								</div>
+							{% else %}
+								<div class="profile-avatar-placeholder">
+									{{ user.username|first|upper }}
+								</div>
+							{% endif %}
+
+							<div>
+								<h1 class="profile-name">{{ user.firstname }}
+									{{ user.lastname }}</h1>
+								<p class="profile-username">@{{ user.username }}</p>
+								<p class="profile-email">{{ user.email }}</p>
+								{% if user.createdAt %}
+									<p class="profile-meta">Inscrit le
+										{{ user.createdAt|date('d/m/Y') }}</p>
+								{% endif %}
+							</div>
+						</div>
+
+						<hr class="profile-divider">
+
+						<div class="profile-info-list">
+							<div class="profile-info-block">
+								<strong>Téléphone</strong>
+								<p>{{ user.phone ?: 'Non renseigné' }}</p>
+							</div>
+
+							<div class="profile-info-block">
+								<strong>Adresse</strong>
+								<p>{{ user.address ?: 'Non renseignée' }}</p>
+							</div>
+
+							<div class="profile-info-block">
+								<strong>Boutique</strong>
+								<p>{{ user.shopName ?: 'Non renseignée' }}</p>
+							</div>
+
+							<div class="profile-info-block">
+								<strong>Adresse boutique</strong>
+								<p>{{ user.shopAddress ?: 'Non renseignée' }}</p>
+							</div>
+						</div>
+					</aside>
+
+					<section class="profile-form-card">
+						<div class="profile-form-header">
+							<h2>Modifier mon profil</h2>
+							<p>Mets à jour tes informations et ton avatar.</p>
+						</div>
+
+						{% for msg in app.flashes('success') %}
+							<div class="alert alert-success mb-4">{{ msg }}</div>
+						{% endfor %}
+
+						{{ form_start(form, { attr: { class: 'profile-form' } }) }}
+						<div class="form-row">
+							<div class="form-group">{{ form_row(form.firstname) }}</div>
+							<div class="form-group">{{ form_row(form.lastname) }}</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-group">{{ form_row(form.username) }}</div>
+							<div class="form-group">{{ form_row(form.email) }}</div>
+						</div>
+
+						<div class="form-row">
+							<div class="form-group">{{ form_row(form.phone) }}</div>
+							<div class="form-group">{{ form_row(form.shopName) }}</div>
+						</div>
+
+						<div class="form-row form-row--full">
+							<div class="form-group">{{ form_row(form.shopAddress) }}</div>
+						</div>
+
+						<div class="form-row form-row--full">
+							<div class="form-group">{{ form_row(form.address) }}</div>
+						</div>
+
+						<div class="form-row form-row--full">
+							<div class="form-group form-group--file">
+								{{ form_label(form.avatarFile) }}
+								{{ form_widget(form.avatarFile) }}
+								{{ form_errors(form.avatarFile) }}
+
+								{% if user.avatar %}
+									<div class="profile-avatar-current">
+										<img src="{{ asset('uploads/avatars/' ~ user.avatar) }}" alt="Avatar actuel de {{ user.username }}">
+										<span>Avatar actuel</span>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+
+						<div class="profile-form-actions">
+							<button type="submit" class="btn btn-secondary">
+								Enregistrer les modifications
+							</button>
+						</div>
+						{{ form_end(form) }}
+					</section>
+				</div>
+			</div>
+		</div>
+	</main>
+{% endblock %}

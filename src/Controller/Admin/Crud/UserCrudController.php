@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller\Admin;
+namespace App\Controller\Admin\Crud;
 
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -8,7 +8,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
@@ -66,17 +65,4 @@ class UserCrudController extends AbstractCrudController
                 ->onlyOnIndex(),
         ];
     }
-    public function approveShop(AdminContext $context, EntityManagerInterface $em)
-    {
-        $user = $context->getEntity()->getInstance();
-
-        $user->addRole('ROLE_SHOP');
-        $user->setShopRequest(false);
-
-        $em->flush();
-
-        $this->addFlash('success', 'Boutique validée');
-
-        return $this->redirect($this->generateUrl('admin'));
-   }
 }

@@ -314,26 +314,35 @@
   margin-top: var(--space-2);
 }
 
-.btn-contact {
+.show-info__actions-row {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
   width: 100%;
-  padding: 0.85rem;
+}
+
+.show-info__actions-row .btn {
+  min-height: 48px;
+  padding: 0.85rem 1rem;
   font-size: var(--text-base);
-  font-weight: 600;
-  color: #ffffff;
-  background: linear-gradient(180deg, #7867f0 0%, #5b48d3 100%);
-  border: 1px solid rgba(186, 168, 255, 0.22);
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  transition:
-    background 0.2s,
-    transform 0.1s;
-  box-shadow:
-    0 8px 20px rgba(91, 72, 211, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.show-info__actions-row .btn-contact {
+  flex: 1 1 40%;
+}
+
+.show-info__actions-row .btn-achat {
+  flex: 1 1 60%;
+}
+
+.btn-achat svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.btn-achat:hover svg {
+  transform: translateX(3px);
 }
 
 .btn-contact svg {
@@ -342,50 +351,34 @@
   flex-shrink: 0;
 }
 
-.btn-contact:hover {
-  background: linear-gradient(180deg, #8474f5 0%, #6653dc 100%);
-  text-decoration: none;
-  color: #ffffff;
-}
-
-.btn-contact:active {
-  transform: scale(0.99);
-}
-
-/* Actions propriétaire */
-.show-info__owner-actions {
-  display: flex;
-  gap: 0.6rem;
-}
-
-.btn-edit {
+/* Lien Modifier — tertiaire, sous les actions principales */
+.btn-show-edit {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1rem;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.55rem 0.75rem;
   font-size: var(--text-sm);
   font-weight: 500;
-  color: #ead7ac;
-  background: linear-gradient(180deg, rgba(53, 43, 34, 0.92), rgba(35, 29, 24, 0.96));
-  border: 1px solid rgba(183, 144, 84, 0.4);
+  color: var(--color-text-muted);
+  text-decoration: none;
   border-radius: var(--radius-sm);
-  text-decoration: none;
   transition:
-    background 0.2s,
-    border-color 0.2s;
-  flex: 1;
-  justify-content: center;
+    color 0.15s,
+    background 0.15s;
 }
 
-.btn-edit svg {
-  width: 15px;
-  height: 15px;
-}
-
-.btn-edit:hover {
-  background: linear-gradient(180deg, rgba(67, 54, 42, 0.96), rgba(44, 36, 28, 0.98));
-  border-color: rgba(214, 180, 116, 0.6);
+.btn-show-edit:hover {
+  color: #f0d7aa;
+  background: rgba(183, 144, 84, 0.1);
   text-decoration: none;
+}
+
+.btn-show-edit svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 /* ── Responsive ── */
@@ -412,5 +405,14 @@
 
   .show-info__price {
     font-size: 1.6rem;
+  }
+
+  .show-info__actions-row {
+    flex-direction: column;
+  }
+
+  .show-info__actions-row .btn-contact,
+  .show-info__actions-row .btn-achat {
+    flex: 1 1 auto;
   }
 }

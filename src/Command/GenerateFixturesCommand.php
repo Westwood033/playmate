@@ -20,7 +20,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class GenerateFixturesCommand extends Command
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly EntityManagerInterface      $em,
         private readonly UserPasswordHasherInterface $hasher,
     ) {
         parent::__construct();
@@ -75,6 +75,7 @@ class GenerateFixturesCommand extends Command
             $user->setLastname($this->randomLastname());
             $user->setPassword($this->hasher->hashPassword($user, $password));
             $user->setIsVerified(true);
+            $user->setAddress($this->randomAddress());
 
             if ($i === 1 || random_int(1, 5) === 1) {
                 $user->setRoles(['ROLE_USER', 'ROLE_ADMIN']);
@@ -461,5 +462,16 @@ class GenerateFixturesCommand extends Command
         }
 
         return array_values(array_unique($images));
+    }
+
+    private function randomAddress(): string
+    {
+        $addresses = [
+            "3 rue du Soleil, 55600 Lons",
+            "782 Avenue de la Libération, 64230 Lescar",
+            "1 Place Royale, 44000 Nantes",
+            "6 rue Wilfrid Voynich, 14141 Prage"
+        ];
+        return $addresses[array_rand($addresses)];
     }
 }

@@ -60,7 +60,7 @@ class="upload-preview-grid" id="upload-preview-grid">
 {% if editing is defined and editing and item.images|length > 0 %}
 	{% for img in item.images %}
 		<div class="upload-thumb upload-thumb--existing {% if loop.first %}upload-thumb--cover{% endif %}" draggable="true" data-filename="{{ img }}">
-			<img src="{{ asset(img) }}" alt="Photo {{ loop.index }}">
+			<img src="{{ asset('uploads/items/' ~ img) }}" alt="Photo {{ loop.index }}">
 			<button type="button" class="upload-thumb__remove" title="Supprimer">
 				<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
 					<path d="M18 6 6 18M6 6l12 12"/>

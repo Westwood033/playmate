@@ -63,6 +63,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shopName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $shopAddress = null;
 
     #[ORM\Column(length: 20, nullable: true)]
@@ -83,10 +86,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Tournament::class, mappedBy: 'owner')]
     private Collection $tournamentsCreated;
 
+    /**
+     * @var Collection<int, Transaction>
+     */
+    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'buyer', orphanRemoval: true)]
+    private Collection $transactions;
+
+    /**
+     * @var Collection<int, Transaction>
+     */
+    #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'seller', orphanRemoval: true)]
+    private Collection $transactionsSold;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $address = null;
+
     public function __construct()
     {
-        $this->items = new ArrayCollection();
         $this->roles = ['ROLE_USER'];
+        $this->transactions = new ArrayCollection();
+        $this->transactionsSold = new ArrayCollection();
         $this->items = new ArrayCollection();
         $this->tournaments = new ArrayCollection();
         $this->tournamentsCreated = new ArrayCollection();
@@ -141,7 +160,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string)$this->email;
     }
 
     public function getRoles(): array
@@ -188,8 +207,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    #[Deprecated]
     public function eraseCredentials(): void
     {
+        // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    #[ORM\PrePersist]
+    public function setCreatedAt(): void
+    {
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getCreatedAt(): ?DateTimeImmutable
@@ -197,23 +224,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): static
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatar = null;
+
+    public function getAvatar(): ?string
     {
-        $this->createdAt = $createdAt;
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): static
+    {
+        $this->avatar = $avatar;
 
         return $this;
+    }
+
+    #[ORM\PreUpdate]
+    public function setUpdatedAt(): void
+    {
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getUpdatedAt(): ?DateTimeImmutable
     {
         return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(?DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     public function isVerified(): bool
@@ -281,6 +315,55 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactions(): Collection
+    {
+        return $this->transactions;
+    }
+
+    public function addTransaction(Transaction $transaction): static
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+            $transaction->setBuyer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransaction(Transaction $transaction): static
+    {
+        if ($this->transactions->removeElement($transaction)) {
+            // set the owning side to null (unless already changed)
+            if ($transaction->getBuyer() === $this) {
+                $transaction->setBuyer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Transaction>
+     */
+    public function getTransactionsSold(): Collection
+    {
+        return $this->transactionsSold;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
 
     public function removeTournament(Tournament $tournament): static
     {
@@ -296,32 +379,67 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setShopAddress(?string $shopAddress): static
     {
-       $this->shopAddress = $shopAddress;
+        $this->shopAddress = $shopAddress;
 
-       return $this;
+        return $this;
     }
 
     public function getPhone(): ?string
     {
-       return $this->phone;
+        return $this->phone;
     }
 
     public function setPhone(?string $phone): static
-   {
-       $this->phone = $phone;
-
-       return $this;
-   }
-
-   public function isShopRequest(): ?bool
-   {
-       return $this->shopRequest;
-   }
-
-   public function setShopRequest(?bool $shopRequest): static
-   {
-       $this->shopRequest = $shopRequest;
+    {
+        $this->phone = $phone;
 
         return $this;
+    }
+
+    public function isShopRequest(): ?bool
+    {
+        return $this->shopRequest;
+    }
+
+    public function setShopRequest(?bool $shopRequest): static
+    {
+        $this->shopRequest = $shopRequest;
+
+        return $this;
+    }
+
+    public function getShopName(): ?string
+    {
+        return $this->shopName;
+    }
+
+    public function setShopName(?string $shopName): void
+    {
+        $this->shopName = $shopName;
+    }
+
+    public function getTournamentsCreated(): Collection
+    {
+        return $this->tournamentsCreated;
+    }
+
+    public function setTournamentsCreated(Collection $tournamentsCreated): void
+    {
+        $this->tournamentsCreated = $tournamentsCreated;
+    }
+
+    public function getTournaments(): Collection
+    {
+        return $this->tournaments;
+    }
+
+    public function setTournaments(Collection $tournaments): void
+    {
+        $this->tournaments = $tournaments;
+    }
+
+    public function __toString(): string
+    {
+        return $this->username;
     }
 }

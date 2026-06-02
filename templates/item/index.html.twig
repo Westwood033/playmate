@@ -97,7 +97,16 @@
 							<a href="{{ path('item_show', {id: item.id}) }}" class="item-card {% if item.sold %}item-card--sold{% endif %}">
 								<div class="item-card__image">
 									{% if item.images|length > 0 %}
-										<img src="{{ asset(item.images[0]) }}" alt="{{ item.name }}">
+										{% set image = item.images|length ? item.images[0] : 'images/items/placeholder.jpg' %}
+
+										{% set imagePath =
+                                            image starts with 'uploads/'
+                                            or image starts with 'images/'
+                                            or image starts with '/images/'
+                                                ? image
+                                                : 'uploads/items/' ~ image
+                                        %}
+										<img src="{{ asset(imagePath) }}" alt="{{ item.name }}" class="market-card__image">
 									{% else %}
 										<div class="item-card__image-placeholder">
 											<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">

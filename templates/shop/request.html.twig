@@ -7,129 +7,129 @@
 {% endblock %}
 
 {% block body %}
-{% include 'header.html.twig' %}
-<main class="page">
-    <div class="container-sm">
-        <div class="card">
+    {% include 'header.html.twig' %}
+    <main class="page">
+        <div class="container-sm">
+            <div class="card">
 
-            <div class="logo">
-                <h1>Playmate</h1>
-                <p>Demande de compte boutique</p>
-            </div>
+                <div class="logo">
+                    <h1>Playmate</h1>
+                    <p>Demande de compte boutique</p>
+                </div>
 
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ label }}">
-                        {{ message }}
-                    </div>
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
 
-            {{ form_errors(form) }}
+                {{ form_errors(form) }}
 
-            {{ form_start(form, {'attr': {'class': 'auth-form'}}) }}
+                {{ form_start(form, {'attr': {'class': 'auth-form'}}) }}
 
                 <div class="form-group">
-                    {{ form_label(form.username) }}
-                    {{ form_widget(form.username, {
+                    {{ form_label(form.shopName) }}
+                    {{ form_widget(form.shopName, {
                         'attr': {
                             'class': 'form-group',
                             'placeholder': 'Nom de votre boutique'
                         }
                     }) }}
-                    {{ form_errors(form.username) }}
+                    {{ form_errors(form.shopName) }}
                 </div>
-
-               <div class="form-group">
-					{{ form_label(form.street) }}
-					{{ form_widget(form.street, {'attr': {'placeholder': 'Adresse', 'class': 'form-control'}}) }}
-					{{ form_errors(form.street) }}
-					<div class="location-row">
-						<div>
-							{{ form_widget(form.postalCode, {
-            'attr': {
-                'placeholder': 'Code Postal',
-                'class': 'form-control',
-            }
-        }) }}
-							{{ form_errors(form.postalCode) }}
-						</div>
-
-						<div>
-							{{ form_widget(form.city, {
-                        'attr': {
-                            'placeholder': 'Ville',
-                            'class': 'form-control',
-                        }
-                    }) }}
-							{{ form_errors(form.city) }}
-						</div>
-
-						<div>
-							{{ form_widget(form.country, {
-                        'attr': {
-                            'placeholder': 'Pays',
-                            'class': 'form-control',
-                        }
-                    }) }}
-							{{ form_errors(form.country) }}
-						</div>
-					</div>
 
                 <div class="form-group">
-                    {{ form_label(form.phone) }}
-                    {{ form_widget(form.phone, {
-                        'attr': {
-                            'class': 'form-group',
-                            'placeholder': '06 00 00 00 00',
-                            'maxlength' : 14,
-                        }
-                    }) }}
-                    {{ form_errors(form.phone) }}
+                    {{ form_label(form.street) }}
+                    {{ form_widget(form.street, {'attr': {'placeholder': 'Adresse', 'class': 'form-control'}}) }}
+                    {{ form_errors(form.street) }}
+                    <div class="location-row">
+                        <div>
+                            {{ form_widget(form.postalCode, {
+                                'attr': {
+                                    'placeholder': 'Code Postal',
+                                    'class': 'form-control',
+                                }
+                            }) }}
+                            {{ form_errors(form.postalCode) }}
+                        </div>
+
+                        <div>
+                            {{ form_widget(form.city, {
+                                'attr': {
+                                    'placeholder': 'Ville',
+                                    'class': 'form-control',
+                                }
+                            }) }}
+                            {{ form_errors(form.city) }}
+                        </div>
+
+                        <div>
+                            {{ form_widget(form.country, {
+                                'attr': {
+                                    'placeholder': 'Pays',
+                                    'class': 'form-control',
+                                }
+                            }) }}
+                            {{ form_errors(form.country) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(form.phone) }}
+                        {{ form_widget(form.phone, {
+                            'attr': {
+                                'class': 'form-group',
+                                'placeholder': '05 00 00 00 00',
+                                'maxlength' : 14,
+                            }
+                        }) }}
+                        {{ form_errors(form.phone) }}
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary">
+                        Envoyer la demande
+                    </button>
+
+                    {{ form_end(form) }}
+
                 </div>
-
-                <button type="submit" class="btn btn-secondary">
-                    Envoyer la demande
-                </button>
-
-            {{ form_end(form) }}
-
+            </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<script>
-document.querySelector('#shop_request_phone').addEventListener('input', function (e) {
-    let value = e.target.value.replace(/\D/g, '').substring(0, 10);
+    <script>
+        document.querySelector('#shop_request_phone').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '').substring(0, 10);
 
-    value = value.replace(/(\d{2})(?=\d)/g, '$1 ');
+            value = value.replace(/(\d{2})(?=\d)/g, '$1 ');
 
-    e.target.value = value;
-});
+            e.target.value = value;
+        });
 
-    const postalCodeInput = document.getElementById('shop_request_postalCode');
-    const cityInput = document.getElementById('shop_request_city');
-    const countryInput = document.getElementById('shop_request_country');
+        const postalCodeInput = document.getElementById('shop_request_postalCode');
+        const cityInput = document.getElementById('shop_request_city');
+        const countryInput = document.getElementById('shop_request_country');
 
-    postalCodeInput.addEventListener('blur', async function () {
-        const postalCode = postalCodeInput.value.trim();
+        postalCodeInput.addEventListener('blur', async function () {
+            const postalCode = postalCodeInput.value.trim();
 
-        if (postalCode.length === 5) {
-            try {
-                const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${postalCode}&type=municipality`);
-                const data = await response.json();
+            if (postalCode.length === 5) {
+                try {
+                    const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${postalCode}&type=municipality`);
+                    const data = await response.json();
 
-                if (data.features.length > 0) {
-                    const city = data.features[0].properties.city || data.features[0].properties.name;
+                    if (data.features.length > 0) {
+                        const city = data.features[0].properties.city || data.features[0].properties.name;
 
-                    cityInput.value = city;
-                    countryInput.value = 'France';
+                        cityInput.value = city;
+                        countryInput.value = 'France';
+                    }
+                } catch (error) {
+                    console.error('Erreur API :', error);
                 }
-            } catch (error) {
-                console.error('Erreur API :', error);
             }
-        }
-    });
-</script>
-
+        });
+    </script>
 {% endblock %}
