@@ -14,26 +14,26 @@
 						<a href="{{ path('item_index') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
 							Ma Boutique
 						</a>
-						<a href="{{ path('app_tournament_index') }}"
-						   class="{{ current_route starts with 'app_tournament' ? 'text-body' : 'text-muted' }}">
-							Tournois
-						</a>
-					{% else %}
-						<a href="{{ path('app_tournament_new', {id: app.user.id}) }}" class="{{ current_route == 'app_tournament_new' ? 'text-body' : 'text-muted' }}">
-							Créer un tournoi
-						</a>
-						<a href="{{ path('app_tournament_index') }}"
-						   class="{{ current_route == 'app_tournament_index' ? 'text-body' : 'text-muted' }}">
-							Tournois
-						</a>
-						<a href="{{ path('app_shop_request') }}"
-                           class="{% if app.request.getPathInfo() starts with path('app_shop_request') %}text-body{% else %}text-muted{% endif %}">
-                            Je suis une boutique
-                    </a>
 					{% endif %}
 
 					<a href="{{ path('item_index') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
 						TCG à l'achat
+					</a>
+
+					<a href="{{ path('app_tournament_index') }}" class="{{ current_route == 'app_tournament_index' ? 'text-body' : 'text-muted' }}">
+							Tournois
+						</a>
+
+					<a href="{{ path('app_profile') }}" class="profile-header-link {{ current_route == 'app_profile' ? 'is-active text-body' : 'text-muted' }}">
+						{% if app.user.avatar %}
+							<span class="profile-header-link__avatar">
+								<img src="{{ asset('uploads/avatars/' ~ app.user.avatar) }}" alt="Avatar de {{ app.user.username }}">
+							</span>
+						{% else %}
+							<span class="profile-header-link__placeholder">
+								{{ app.user.username|first|upper }}
+							</span>
+						{% endif %}
 					</a>
 
 					<a href="{{ logout_path() }}" class="btn btn-secondary">

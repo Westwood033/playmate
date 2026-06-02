@@ -227,6 +227,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->createdAt;
     }
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $avatar = null;
+
+    public function getAvatar(): ?string
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?string $avatar): static
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
     #[ORM\PreUpdate]
     public function setUpdatedAt(): void
     {
@@ -349,6 +364,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAddress(string $address): static
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function removeTournament(Tournament $tournament): static
+    {
+        $this->tournaments->removeElement($tournament);
 
         return $this;
     }

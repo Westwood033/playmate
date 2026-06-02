@@ -5,24 +5,16 @@
 
 {% block stylesheets %}
 	{{ parent() }}
-	
-
 {% endblock %}
 
-{% block body %}
-	<main class="page">
-		<div class="container">
-			<div class="card">
-				<div class="logo">
-					<h1 class="brand-name">Playmate</h1>
-					<p>Créez un tournoi</p>
-				</div>
+{% block  body %}
 
-				{% for flash_error in app.flashes('verify_email_error') %}
+{% for flash_error in app.flashes('verify_email_error') %}
 					<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
 				{% endfor %}
 
-				{{ form_errors(form) }}
+{{ form_errors(form) }}
+
 
 {{ form_start(form, {'attr': {'class': 'auth-form'}}) }}
 	<div class="form-group">
@@ -51,24 +43,26 @@
 
 	<div class="form-group">
 		{{ form_label(form.street) }}
-		{{ form_widget(form.street, {'attr': {'placeholder': 'Adresse'}}) }}
+		{{ form_widget(form.street, {'attr': {'placeholder': 'Adresse', 'value': street is defined ? street}}) }}
 		{{ form_errors(form.street) }}
 
 		<div class="location-row">
 			<div>
-				{{ form_widget(form.postalCode, {'attr': {'placeholder': 'Code Postal'}}) }}
+				{{ form_widget(form.postalCode, {'attr': {'placeholder': 'Code Postal', 'value' : postalCode is defined ? postalCode}}) }}
 				{{ form_errors(form.postalCode) }}
 			</div>
 			<div>
-				{{ form_widget(form.city, {'attr': {'placeholder': 'Ville'}}) }}
+				{{ form_widget(form.city, {'attr': {'placeholder': 'Ville', 'value': city is defined ? city}}) }}
 				{{ form_errors(form.city) }}
 			</div>
 			<div>
-				{{ form_widget(form.country, {'attr': {'placeholder': 'Pays'}}) }}
+				{{ form_widget(form.country, {'attr': {'placeholder': 'Pays', 'value': country is defined ? country}}) }}
 				{{ form_errors(form.country) }}
 			</div>
 		</div>
 	</div>
 
 	<button type="submit" class="btn btn-secondary">{{ button_label|default('Créer') }}</button>
-{{ form_end(form) }}
+
+	{{ form_end(form) }}
+{% endblock %}

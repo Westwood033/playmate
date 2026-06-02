@@ -22,7 +22,6 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script>
-		document.addEventListener('DOMContentLoaded', function () {
 			const postalCodeInput = document.getElementById('tournament_postalCode');
 			const cityInput = document.getElementById('tournament_city');
 			const countryInput = document.getElementById('tournament_country');
@@ -45,6 +44,5 @@
 					console.error('Erreur API :', error);
 				}
 			});
-		});
 	</script>
 {% endblock %}
