@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'header.html.twig' %}
+	{% include 'header.html.twig' %}
 
 	<main class="page">
 		<div class="container">
@@ -16,260 +16,273 @@
 
 					{% if tournaments is defined and tournaments|length > 0 %}
 						<div class="tournaments-grid">
-					{% for tournament in tournaments %}
-						{% set isPast = tournament.tournamentDate and tournament.tournamentDate|date('U') < 'now'|date('U') %}
-						<article class="tournament-card {{ isPast ? 'tournament-card--past' : '' }}">
-							<div class="tournament-card__header">
-								<div class="tournament-card__date-badge">
-									{% if tournament.tournamentDate %}
-										<span class="tournament-card__day">{{ tournament.tournamentDate|date('d') }}</span>
-										<span class="tournament-card__month">{{ tournament.tournamentDate|date('M')|upper }}</span>
-									{% else %}
-										<span class="tournament-card__day">--</span>
-										<span class="tournament-card__month">N/D</span>
+							{% for tournament in tournaments %}
+								{% set isPast = tournament.tournamentDate and tournament.tournamentDate|date('U') < 'now'|date('U') %}
+								<article class="tournament-card {{ isPast ? 'tournament-card--past' : '' }}">
+									<div class="tournament-card__header">
+										<div class="tournament-card__date-badge">
+											{% if tournament.tournamentDate %}
+												<span class="tournament-card__day">{{ tournament.tournamentDate|date('d') }}</span>
+												<span class="tournament-card__month">{{ tournament.tournamentDate|date('M')|upper }}</span>
+											{% else %}
+												<span class="tournament-card__day">--</span>
+												<span class="tournament-card__month">N/D</span>
+											{% endif %}
+										</div>
+
+										<div class="container tournament-card__badge_container">
+											{% if tournament.owner === app.user %}
+												<span class="tournament-card__badge tournament-card__badge--created">Créé par vous</span>
+											{% elseif app.user in tournament.users %}
+												<span class="tournament-card__badge tournament-card__badge--registered">inscrit</span>
+											{% endif %}
+
+											{% if isPast %}
+												<span class="tournament-card__badge tournament-card__badge--past">Terminé</span>
+											{% else %}
+												<span class="tournament-card__badge">À venir</span>
+											{% endif %}
+										</div>
+									</div>
+
+									<h2 class="tournament-card__name">{{ tournament.name }}</h2>
+
+									{% if tournament.description %}
+										<p class="tournament-card__description">{{ tournament.description }}</p>
 									{% endif %}
-								</div>
 
+									<ul class="tournament-card__info">
+										{% if tournament.address %}
+											<li>
+												<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+													<circle cx="12" cy="10" r="3"/>
+												</svg>
+												<span>{{ tournament.address|replace({'|': ' '}) }}</span>
+											</li>
+										{% endif %}
+										<li>
+											<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+												<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+												<circle cx="9" cy="7" r="4"/>
+												<path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+											</svg>
+											<span>
+												{{ tournament.users|length }}
+												{% if tournament.participantNumber %}
+													/
+													{{ tournament.participantNumber }}
+												{% endif %}
+												participant{{ tournament.participantNumber > 1 ? 's' : '' }}
+											</span>
+										</li>
+										{% if tournament.owner %}
+											<li>
+												<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+													<circle cx="12" cy="7" r="4"/>
+												</svg>
+												<span>Organisé par
+													{{ tournament.owner.username }}</span>
+											</li>
+										{% endif %}
+									</ul>
 
-                                <div class="container tournament-card__badge_container">
-                                {% if tournament.owner === app.user %}
-									<span class="tournament-card__badge tournament-card__badge--created">Créé par vous</span>
-								{% elseif app.user in tournament.users %}
-									<span class="tournament-card__badge tournament-card__badge--registered">inscrit</span>
-								{% endif %}
-
-								{% if isPast %}
-									<span class="tournament-card__badge tournament-card__badge--past">Terminé</span>
-								{% else %}
-									<span class="tournament-card__badge">À venir</span>
-								{% endif %}
-                                </div>
-							</div>
-
-							<h2 class="tournament-card__name">{{ tournament.name }}</h2>
-
-							{% if tournament.description %}
-								<p class="tournament-card__description">{{ tournament.description }}</p>
-							{% endif %}
-
-							<ul class="tournament-card__info">
-								{% if tournament.address %}
-									<li>
-										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-											<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-											<circle cx="12" cy="10" r="3"/>
-										</svg>
-										<span>{{ tournament.address|replace({'|': " "}) }}</span>
-									</li>
-								{% endif %}
-								<li>
-									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-										<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-										<circle cx="9" cy="7" r="4"/>
-										<path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-									</svg>
-									<span>
-										{{ tournament.users|length }}
-										{% if tournament.participantNumber %} / {{ tournament.participantNumber }}{% endif %}
-										participant{{ tournament.participantNumber > 1 ? 's' : '' }}
-									</span>
-								</li>
-								{% if tournament.owner %}
-									<li>
-										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-											<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-											<circle cx="12" cy="7" r="4"/>
-										</svg>
-										<span>Organisé par {{ tournament.owner.username }}</span>
-									</li>
-								{% endif %}
-							</ul>
-
-							<div class="tournament-card__actions">
-								<a href="{{ path('app_tournament_show', {id: tournament.id}) }}" class="btn-tournament-show">
-									Voir le détail
-								</a>
-								{% if app.user and tournament.owner == app.user %}
-									<a href="{{ path('app_tournament_edit', {id: tournament.id}) }}" class="btn-tournament-edit" title="Modifier">
-										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-											<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-										</svg>
-									</a>
-								{% endif %}
-							</div>
-						</article>
-					{% endfor %}
-				</div>
+									<div class="tournament-card__actions">
+										<a href="{{ path('app_tournament_show', {id: tournament.id}) }}" class="btn-tournament-show">
+											Voir le détail
+										</a>
+										{% if app.user and tournament.owner == app.user %}
+											<a href="{{ path('app_tournament_edit', {id: tournament.id}) }}" class="btn-tournament-edit" title="Modifier">
+												<svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+													<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+													<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+												</svg>
+											</a>
+										{% endif %}
+									</div>
+								</article>
+							{% endfor %}
+						</div>
 					{% else %}
 						<p class="text-muted">Aucun tournoi disponible cette semaine.</p>
 					{% endif %}
 				</div>
 			</section>
 
-            <div class="grid" style="grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr); align-items: start;">
-                <section class="stack-lg">
-                    <div class="card">
-                        <div class="mb-4">
-                            <h2 class="section-title">Actualités</h2>
-                        </div>
+			<div class="grid" style="grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr); align-items: start;">
+				<section class="stack-lg">
+					<div class="card">
+						<div class="mb-4">
+							<h2 class="section-title">Actualités</h2>
+						</div>
 
-                        {% if newsArticles is defined and newsArticles|length > 0 %}
-                            <div class="stack-lg">
-                                {% for article in newsArticles %}
-                                    <article class="panel">
-                                        <h3 class="mb-2">{{ article.title }}</h3>
+						{% if newsArticles is defined and newsArticles|length > 0 %}
+							<div class="stack-lg mb-6">
+								{% for article in newsArticles %}
+									<article class="panel">
+										<h3 class="mb-2">{{ article.title }}</h3>
 
-                                        {% if article.publishedAt is defined and article.publishedAt %}
-                                            <p class="small text-muted mb-2">
-                                                Publié le
-                                                {{ article.publishedAt|date('d/m/Y') }}
-                                            </p>
-                                        {% endif %}
+										{% if article.publishedAt is defined and article.publishedAt %}
+											<p class="small text-muted mb-2">
+												Publié le
+												{{ article.publishedAt|date('d/m/Y') }}
+											</p>
+										{% endif %}
 
-                                        <p class="mb-4 text-muted">
-                                            {{ article.excerpt ?? article.content|slice(0, 180) ~ '...' }}
-                                        </p>
+										<p class="mb-4 text-muted">
+											{{ article.excerpt ?? article.content|slice(0, 180) ~ '...' }}
+										</p>
 
-                                        {% if article.url is defined and article.url %}
-                                            <a href="{{ article.url }}" class="btn btn-secondary">Lire l’article</a>
-                                        {% endif %}
-                                    </article>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="text-muted">Aucune actualité disponible.</p>
-                        {% endif %}
-                    </div>
-                </section>
+										{% if article.url is defined and article.url %}
+											<a href="{{ article.url }}" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+												Lire l’article
+											</a>
+										{% endif %}
+									</article>
+								{% endfor %}
+							</div>
+						{% endif %}
 
-                <aside class="stack-lg">
-                    <section class="card">
-                        <div class="mb-4">
-                            <h2 class="section-title">Dernières cartes en vente</h2>
-                        </div>
+						<div class="stack-lg">
+							<div>
+								<h3 class="section-title mb-4">Cartes récentes Magic</h3>
+								<div id="mtg-news" class="tcg-news-grid">
+									<p class="text-muted">Chargement des cartes Magic…</p>
+								</div>
+							</div>
 
-                        {% if latestItems is defined and latestItems|length > 0 %}
-                            <div id="latest-items-carousel" class="carousel slide" data-bs-interval="false">
-                                <div class="carousel-inner">
-                                    {% for item in latestItems %}
-                                        {% set image = item.images|length ? item.images[0] : '/images/items/placeholder.jpg' %}
+							<div>
+								<h3 class="section-title mb-4">Cartes récentes Pokémon</h3>
+								<div id="pokemon-news" class="tcg-news-grid">
+									<p class="text-muted">Chargement des cartes Pokémon…</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
 
-                                        <div class="carousel-item {% if loop.first %}active{% endif %}">
-                                            <div class="carousel-card-wrap">
-                                                <article class="market-card">
-                                                    <div class="market-card__image-wrap">
-                                                        {% set rawImage = item.images[0] ?? 'images/items/placeholder.jpg' %}
-                                                        {% set imagePath = rawImage|trim('/') %}
+				<aside class="stack-lg">
+					<section class="card">
+						<div class="mb-4">
+							<h2 class="section-title">Dernières cartes en vente</h2>
+						</div>
 
-                                                        {% if imagePath starts with 'images/' or imagePath starts with 'uploads/' %}
-                                                            <img src="{{ asset(imagePath) }}" alt="{{ item.name }}"
-                                                                 class="market-card__image">
-                                                        {% else %}
-                                                            <img src="{{ asset('uploads/items/' ~ rawImage) }}"
-                                                                 alt="{{ item.name }}" class="market-card__image">
-                                                        {% endif %}
-                                                    </div>
+						{% if latestItems is defined and latestItems|length > 0 %}
+							<div id="latest-items-carousel" class="carousel slide" data-bs-interval="false">
+								<div class="carousel-inner">
+									{% for item in latestItems %}
+										{% set image = item.images|length ? item.images[0] : '/images/items/placeholder.jpg' %}
 
-                                                    <div class="market-card__content">
-                                                        <h3 class="market-card__title">{{ item.name }}</h3>
-                                                        <p class="market-card__description">{{ item.description }}</p>
-                                                        <p class="market-card__price">{{ item.price }}
-                                                            €</p>
-                                                    </div>
-                                                </article>
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
+										<div class="carousel-item {% if loop.first %}active{% endif %}">
+											<div class="carousel-card-wrap">
+												<article class="market-card">
+													<div class="market-card__image-wrap">
+														{% set rawImage = item.images[0] ?? 'images/items/placeholder.jpg' %}
+														{% set imagePath = rawImage|trim('/') %}
 
-                                {% if latestItems|length > 1 %}
-                                    <div class="carousel-nav-row">
-                                        <button class="carousel-nav carousel-nav--prev" type="button"
-                                                data-bs-target="#latest-items-carousel" data-bs-slide="prev"
-                                                aria-label="Carte précédente">
-                                            <span class="carousel-nav__icon" aria-hidden="true">‹</span>
-                                        </button>
+														{% if imagePath starts with 'images/' or imagePath starts with 'uploads/' %}
+															<img src="{{ asset(imagePath) }}" alt="{{ item.name }}" class="market-card__image">
+														{% else %}
+															<img src="{{ asset('uploads/items/' ~ rawImage) }}" alt="{{ item.name }}" class="market-card__image">
+														{% endif %}
+													</div>
 
-                                        <button class="carousel-nav carousel-nav--next" type="button"
-                                                data-bs-target="#latest-items-carousel" data-bs-slide="next"
-                                                aria-label="Carte suivante">
-                                            <span class="carousel-nav__icon" aria-hidden="true">›</span>
-                                        </button>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            <p class="text-muted">Aucune carte en vente récemment.</p>
-                        {% endif %}
-                    </section>
+													<div class="market-card__content">
+														<h3 class="market-card__title">{{ item.name }}</h3>
+														<p class="market-card__description">{{ item.description }}</p>
+														<p class="market-card__price">{{ item.price }}
+															€</p>
+													</div>
+												</article>
+											</div>
+										</div>
+									{% endfor %}
+								</div>
 
-                    <section class="card">
-                        <div class="mb-4">
-                            <h2 class="section-title">Calendrier des événements</h2>
-                        </div>
+								{% if latestItems|length > 1 %}
+									<div class="carousel-nav-row">
+										<button class="carousel-nav carousel-nav--prev" type="button" data-bs-target="#latest-items-carousel" data-bs-slide="prev" aria-label="Carte précédente">
+											<span class="carousel-nav__icon" aria-hidden="true">‹</span>
+										</button>
 
-                        <div class="calendar-wrapper">
-                            <div class="calendar-grid">
-                                {% set days = ['L', 'M', 'M', 'J', 'V', 'S', 'D'] %}
-                                {% for day in days %}
-                                    <div class="calendar-weekday">{{ day }}</div>
-                                {% endfor %}
+										<button class="carousel-nav carousel-nav--next" type="button" data-bs-target="#latest-items-carousel" data-bs-slide="next" aria-label="Carte suivante">
+											<span class="carousel-nav__icon" aria-hidden="true">›</span>
+										</button>
+									</div>
+								{% endif %}
+							</div>
+						{% else %}
+							<p class="text-muted">Aucune carte en vente récemment.</p>
+						{% endif %}
+					</section>
 
-                                {% for dayNumber in 1..31 %}
-                                    {% set hasEvent = eventDays is defined and dayNumber in eventDays %}
-                                    {% set isToday = currentDay is defined and dayNumber == currentDay %}
+					<section class="card">
+						<div class="mb-4">
+							<h2 class="section-title">Calendrier des événements</h2>
+						</div>
 
-                                    <div class="
-																																											calendar-day
-																																											{% if hasEvent %} calendar-day--event{% endif %}
-																																											{% if isToday %} calendar-day--today{% endif %}
-																																										">
-                                        {{ dayNumber }}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
+						<div class="calendar-wrapper">
+							<div class="calendar-grid">
+								{% set days = ['L', 'M', 'M', 'J', 'V', 'S', 'D'] %}
+								{% for day in days %}
+									<div class="calendar-weekday">{{ day }}</div>
+								{% endfor %}
 
-                        {% if upcomingEvents is defined and upcomingEvents|length > 0 %}
-                            <div class="stack mt-4">
-                                {% for event in upcomingEvents %}
-                                    <article class="panel">
-                                        <h3 class="small mb-1">{{ event.title }}</h3>
-                                        <p class="small text-muted mb-1">
-                                            {{ event.date ? event.date|date('d/m/Y H:i') : 'Date à confirmer' }}
-                                        </p>
-                                        <p class="small text-muted">
-                                            {{ event.location ?? 'Lieu non précisé' }}
-                                        </p>
-                                    </article>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <p class="text-muted mt-4">Aucun événement à venir.</p>
-                        {% endif %}
-                    </section>
-                </aside>
-            </div>
-        </div>
-        <div class="flash-container">
-            {% for label, messages in app.flashes %}
-                {% for message in messages %}
-                    <div class="flash-notification flash-{{ label }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        </div>
-    </main>
+								{% for dayNumber in 1..31 %}
+									{% set hasEvent = eventDays is defined and dayNumber in eventDays %}
+									{% set isToday = currentDay is defined and dayNumber == currentDay %}
 
-    <script>
-        setTimeout(() => {
-            document.querySelectorAll('.flash-notification').forEach(el => {
-                el.style.transition = '0.5s';
-                el.style.opacity = '0';
-                setTimeout(() => el.remove(), 500);
-            });
-        }, 5000);
-    </script>
+									<div class="
+																						                                        calendar-day
+																						                                        {% if hasEvent %} calendar-day--event{% endif %}
+																						                                        {% if isToday %} calendar-day--today{% endif %}
+																						                                    ">
+										{{ dayNumber }}
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+
+						{% if upcomingEvents is defined and upcomingEvents|length > 0 %}
+							<div class="stack mt-4">
+								{% for event in upcomingEvents %}
+									<article class="panel">
+										<h3 class="small mb-1">{{ event.title }}</h3>
+										<p class="small text-muted mb-1">
+											{{ event.date ? event.date|date('d/m/Y H:i') : 'Date à confirmer' }}
+										</p>
+										<p class="small text-muted">
+											{{ event.location ?? 'Lieu non précisé' }}
+										</p>
+									</article>
+								{% endfor %}
+							</div>
+						{% else %}
+							<p class="text-muted mt-4">Aucun événement à venir.</p>
+						{% endif %}
+					</section>
+				</aside>
+			</div>
+		</div>
+		<div class="flash-container">
+			{% for label, messages in app.flashes %}
+				{% for message in messages %}
+					<div class="flash-notification flash-{{ label }}">
+						{{ message }}
+					</div>
+				{% endfor %}
+			{% endfor %}
+		</div>
+	</main>
+
+	<script>
+		setTimeout(() => {
+document.querySelectorAll('.flash-notification').forEach(el => {
+el.style.transition = '0.5s';
+el.style.opacity = '0';
+setTimeout(() => el.remove(), 500);
+});
+}, 5000);
+	</script>
 {% endblock %}
