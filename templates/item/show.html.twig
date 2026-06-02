@@ -36,7 +36,7 @@
             } %}
 
             <div
-                    class="show-page">
+                class="show-page">
 
                 {# ── Fil d'Ariane ── #}
                 <nav class="show-breadcrumb">
@@ -51,14 +51,10 @@
                     <span class="show-breadcrumb__current">{{ item.name }}</span>
                 </nav>
 
-                <div
-                        class="show-layout">
+                <div class="show-layout">
 
-                    {# ══════════════════════════════════════
-																COLONNE GAUCHE — Galerie photos
-															══════════════════════════════════════ #}
                     <div
-                            class="show-gallery">
+                        class="show-gallery">
 
                         {# Image principale #}
                         <div class="show-gallery__main" id="gallery-main">
@@ -70,8 +66,7 @@
                                 {% if imagePath starts with 'images/' or imagePath starts with 'uploads/' %}
                                     <img src="{{ asset(imagePath) }}" alt="{{ item.name }}" id="gallery-main-img">
                                 {% else %}
-                                    <img src="{{ asset('uploads/items/' ~ rawImage) }}" alt="{{ item.name }}"
-                                         id="gallery-main-img">
+                                    <img src="{{ asset('uploads/items/' ~ rawImage) }}" alt="{{ item.name }}" id="gallery-main-img">
                                 {% endif %}
                             {% else %}
 
@@ -94,10 +89,7 @@
                         {% if item.images|length > 1 %}
                             <div class="show-gallery__thumbs" id="gallery-thumbs">
                                 {% for img in item.images %}
-                                    <button type="button"
-                                            class="show-gallery__thumb {% if loop.first %}show-gallery__thumb--active{% endif %}"
-                                            data-src="{{ asset('uploads/items/' ~ img) }}"
-                                            aria-label="Photo {{ loop.index }}">
+                                    <button type="button" class="show-gallery__thumb {% if loop.first %}show-gallery__thumb--active{% endif %}" data-src="{{ asset('uploads/items/' ~ img) }}" aria-label="Photo {{ loop.index }}">
                                         <img src="{{ asset('uploads/items/' ~ img) }}" alt="Photo {{ loop.index }}">
                                     </button>
                                 {% endfor %}
@@ -106,23 +98,20 @@
 
                     </div>
 
-                    {# ══════════════════════════════════════
-																 COLONNE DROITE — Infos + actions
-															══════════════════════════════════════ #}
                     <div
-                            class="show-info">
+                        class="show-info">
 
                         {# Badges catégorie + état #}
                         <div class="show-info__badges">
                             {% if item.category %}
                                 <span class="badge badge--category">
-									{{ catLabels[item.category] ?? item.category }}
-								</span>
+                                    {{ catLabels[item.category] ?? item.category }}
+                                </span>
                             {% endif %}
                             {% if item.condition %}
                                 <span class="badge badge--condition">
-									{{ condLabels[item.condition] ?? item.condition }}
-								</span>
+                                    {{ condLabels[item.condition] ?? item.condition }}
+                                </span>
                             {% endif %}
                             {% if item.sold %}
                                 <span class="badge badge--sold">Vendu</span>
@@ -146,7 +135,7 @@
 
                         {# Séparateur #}
                         <hr
-                                class="show-info__sep">
+                        class="show-info__sep">
 
                         {# Vendeur #}
                         <div class="show-info__seller">
@@ -157,7 +146,7 @@
                                 <p class="show-info__seller-name">{{ item.owner.username }}</p>
                                 <p class="show-info__seller-since">
                                     Membre
-                                    depuis
+                                                                                                                                                                                                                                                                                                                                                                        depuis
                                     {{ item.owner.createdAt is defined ? item.owner.createdAt|date('M Y') : 'N/A' }}
                                 </p>
                             </div>
@@ -175,14 +164,14 @@
                             {% if not item.sold %}
                                 <div class="show-info__actions-row">
                                     <a href="mailto:{{ item.owner.email }}" class="btn btn-secondary btn-contact">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                                         </svg>
                                         Contacter
                                     </a>
                                     <a href="{{ path('transaction_new', {id: item.id}) }}" class="btn btn-secondary btn-achat">
                                         <span>Acheter</span>
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M5 12h14M13 5l7 7-7 7"/>
                                         </svg>
                                     </a>
@@ -191,7 +180,7 @@
 
                             {% if app.user and (app.user == item.owner or is_granted('ROLE_ADMIN')) %}
                                 <a href="{{ path('item_edit', {id: item.id}) }}" class="btn-show-edit">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
                                         <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                                     </svg>

@@ -5,32 +5,39 @@
     <link rel="stylesheet" href="{{ asset('styles/transaction.css') }}">
 {% endblock %}
 
-{% block title %}{{ editing is defined and editing ? 'Modifier une transaction' : 'Créer une transaction' }} — Playmate{% endblock %}
+{% block title %}
+    {{ editing is defined and editing ? 'Modifier une transaction' : 'Créer une transaction' }}
+    — Playmate
+{% endblock %}
 
 {% block body %}
-<div class="transaction-form-page">
+    <div class="transaction-form-page">
 
-    <div class="transaction-form-container">
-        <div class="transaction-form-card">
+        <div class="transaction-form-container">
+            <div class="transaction-form-card">
 
-            <div class="transaction-form-header">
-                <h1>{{ editing is defined and editing ? 'Modifier la transaction' : 'Créer une transaction' }}</h1>
-                <p>{{ 'Remplissez les informations pour votre transaction.' }}</p>
-            </div>
+                <div class="transaction-form-header">
+                    <h1>{{ editing is defined and editing ? 'Modifier la transaction' : 'Créer une transaction' }}</h1>
+                    <p>{{ 'Remplissez les informations pour votre transaction.' }}</p>
+                </div>
 
-            <h1 class="show-info__title">{{ item.name }} - État : {{ item.condition }} - {{ item.price }}€</h1>
+                <h1 class="show-info__title">{{ item.name }}
+                    - État :
+                    {{ item.condition }}
+                    -
+                    {{ item.price }}€</h1>
 
-            {% for msg in app.flashes('success') %}
-                <div class="alert alert-success">{{ msg }}</div>
-            {% endfor %}
+                {% for msg in app.flashes('success') %}
+                    <div class="alert alert-success">{{ msg }}</div>
+                {% endfor %}
 
-            {{ form_start(form, {attr: {class: 'transaction-form', novalidate: 'novalidate'}}) }}
+                {{ form_start(form, {attr: {class: 'transaction-form', novalidate: 'novalidate'}}) }}
 
                 <div class="form-column">
                     <div id="address-container" class="form-group">
-                        {{ form_label(form.address) }}
-                        {{ form_widget(form.address) }}
-                        {{ form_errors(form.address) }}
+                        {{ form_label(form.buyerAddress) }}
+                        {{ form_widget(form.buyerAddress) }}
+                        {{ form_errors(form.buyerAddress) }}
                     </div>
 
                     <div class="form-group">
@@ -50,12 +57,12 @@
                     {{ editing is defined and editing ? 'Modifier la transaction' : 'Créer la transaction' }}
                 </button>
 
-            {{ form_end(form) }}
+                {{ form_end(form) }}
 
+            </div>
         </div>
-    </div>
 
-</div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
