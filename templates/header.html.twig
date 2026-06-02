@@ -16,12 +16,6 @@
 						</a>
 					{% endif %}
 
-					{% if is_granted('ROLE_SHOP') %}
-						<a href="{{ path('item_index') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
-							Ma Boutique
-						</a>
-					{% endif %}
-
 					<a href="{{ path('item_index') }}" class="{{ current_route == 'item_index' ? 'text-body' : 'text-muted' }}">
 						TCG à l'achat
 					</a>

@@ -47,6 +47,12 @@ class ItemRepository extends ServiceEntityRepository
                 ->setParameter('condition', $filters['condition']);
         }
 
+        if (!empty($filters['owner'])) {
+            $qb
+                ->andWhere('i.owner = :condition')
+                ->setParameter('condition', $filters['owner']);
+        }
+
         if (array_key_exists('sold', $filters) && $filters['sold'] !== '') {
             $qb
                 ->andWhere('i.isSold = :sold')
