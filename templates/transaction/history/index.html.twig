@@ -1,42 +1,51 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('styles/item.css') }}">
-{% endblock %}
-
 {% block title %}Articles — Playmate
 {% endblock %}
 
 {% block body %}
-    {% include 'header.html.twig' %}
+	{% include 'header.html.twig' %}
 
-    <main class="page">
-        <div class="container">
-            <div class="transactions-page">
+	<main class="page">
+		<div class="container">
+			<div class="transactions-page">
 
-                {% for msg in app.flashes('success') %}
-                    <div class="alert alert-success">{{ msg }}</div>
-                {% endfor %}
+				{% for msg in app.flashes('success') %}
+					<div class="alert alert-success">{{ msg }}</div>
+				{% endfor %}
 
-                <div class="transactions-grid">
-                    {% for transaction in transactions %}
-                        <a href="{{ path('item_show', {id: transaction.item.id}) }}" class="transaction-card {% if transaction.item.sold %}transaction-card--sold{% endif %}">
-                            <div class="transaction-card__body">
-                                <h2 class="transaction-card__name">Produit :
-                                    {{ transaction.item.name }}</h2>
-                                <p class="transaction-card__price">Prix :
-                                    {{ transaction.item.price|number_format(2, ',', ' ') }}€</p>
-                                <p class="transaction-card__adress">Adresse de livraison :
-                                    {{ transaction.buyerAddress }}</p>
-                                <p class="transaction-card__seller">Adresse du vendeur :
-                                    {{ transaction.sellerAddress }}</p>
-                            </div>
-                        </a>
-                    {% endfor %}
-                </div>
+				<div class="transactions-grid">
+					{% for transaction in transactions %}
+						<a href="{{ path('item_show', {id: transaction.item.id}) }}" class="transaction-card {% if transaction.item.sold %}transaction-card--sold{% endif %}">
+							<div class="transaction-card__body">
+								<h2 class="transaction-card__name">
+									Produit :
+									{{ transaction.item.name }}
+								</h2>
 
-            </div>
-        </div>
-    </main>
+								<p class="transaction-card__price">
+									Prix :
+									{{ transaction.item.price|number_format(2, ',', ' ') }}
+									€
+								</p>
+
+								<p class="transaction-card__address">
+									Adresse de livraison :
+									{{ transaction.buyerAddress }}
+								</p>
+
+								<p class="transaction-card__seller">
+									Adresse du vendeur :
+									{{ transaction.sellerAddress }}
+								</p>
+							</div>
+						</a>
+					{% else %}
+						<p class="text-muted">Aucune transaction disponible.</p>
+					{% endfor %}
+				</div>
+
+			</div>
+		</div>
+	</main>
 {% endblock %}
