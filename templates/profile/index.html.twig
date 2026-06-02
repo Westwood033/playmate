@@ -41,21 +41,27 @@
 								<strong>Téléphone</strong>
 								<p>{{ user.phone ?: 'Non renseigné' }}</p>
 							</div>
+							
+							{% if 'ROLE_SHOP' in app.user.roles %}
 
-							<div class="profile-info-block">
-								<strong>Adresse</strong>
-								<p>{{ user.address ?: 'Non renseignée' }}</p>
-							</div>
+								<div class="profile-info-block">
+									<strong>Boutique</strong>
+									<p>{{ user.shopName ?: 'Non renseignée' }}</p>
+								</div>
 
-							<div class="profile-info-block">
-								<strong>Boutique</strong>
-								<p>{{ user.shopName ?: 'Non renseignée' }}</p>
-							</div>
+								<div class="profile-info-block">
+									<strong>Adresse boutique</strong>
+									<p>{{ user.shopAddress ?: 'Non renseignée' }}</p>
+								</div>
 
-							<div class="profile-info-block">
-								<strong>Adresse boutique</strong>
-								<p>{{ user.shopAddress ?: 'Non renseignée' }}</p>
-							</div>
+							{% else %}
+
+								<div class="profile-info-block">
+									<strong>Adresse</strong>
+									<p>{{ user.address ?: 'Non renseignée' }}</p>
+								</div>
+
+							{% endif %}
 						</div>
 					</aside>
 
@@ -80,16 +86,16 @@
 							<div class="form-group">{{ form_row(form.email) }}</div>
 						</div>
 
-						<div class="form-row">
+						<div class="form-row" style="{{'ROLE_SHOP' not in app.user.roles ? 'display:none;' : '' }}">
 							<div class="form-group">{{ form_row(form.phone) }}</div>
 							<div class="form-group">{{ form_row(form.shopName) }}</div>
 						</div>
 
-						<div class="form-row form-row--full">
+						<div class="form-row form-row--full" style="{{'ROLE_SHOP' not in app.user.roles ? 'display:none;' : '' }}">
 							<div class="form-group">{{ form_row(form.shopAddress) }}</div>
 						</div>
 
-						<div class="form-row form-row--full">
+						<div class="form-row form-row--full" style="{{'ROLE_SHOP' in app.user.roles ? 'display:none;' : '' }}">
 							<div class="form-group">{{ form_row(form.address) }}</div>
 						</div>
 
