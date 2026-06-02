@@ -1,0 +1,553 @@
+/* ===========================
+   item.css — Playmate Item Pages
+   =========================== */
+
+/* ── Reset ciblé ── */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* ────────────────────────────────────────────
+   PAGE INDEX — liste + recherche
+──────────────────────────────────────────── */
+
+.items-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+}
+
+/* En-tête */
+.items-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.items-header__text h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 0.2rem;
+    letter-spacing: -0.5px;
+}
+
+.items-header__text p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Bouton publier */
+.btn-publish {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #5b4fcf;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s, transform 0.1s;
+    white-space: nowrap;
+}
+
+.btn-publish:hover {
+    background-color: #4a3fb8;
+}
+
+.btn-publish:active {
+    transform: scale(0.98);
+}
+
+.btn-publish__icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+/* ── Barre de recherche ── */
+.search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.search-bar__input-wrap {
+    position: relative;
+    flex: 1 1 220px;
+}
+
+.search-bar__icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.search-bar__input {
+    width: 100%;
+    padding: 0.55rem 0.75rem 0.55rem 2.25rem;
+    font-size: 0.9rem;
+    color: #111827;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.search-bar__input:focus {
+    border-color: #7c6fe0;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(124, 111, 224, 0.12);
+}
+
+.search-bar__input::placeholder {
+    color: #9ca3af;
+}
+
+.search-bar__select {
+    padding: 0.55rem 2rem 0.55rem 0.75rem;
+    font-size: 0.875rem;
+    color: #374151;
+    background: #f9fafb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 0.7rem center;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: border-color 0.2s;
+}
+
+.search-bar__select:focus {
+    border-color: #7c6fe0;
+}
+
+.search-bar__btn {
+    padding: 0.55rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #5b4fcf;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-bar__btn:hover {
+    background-color: #4a3fb8;
+}
+
+.search-bar__reset {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-decoration: none;
+    padding: 0.4rem 0.5rem;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+}
+
+.search-bar__reset:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+/* ── Alertes ── */
+.alert {
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+.alert-success {
+    background-color: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.alert-danger {
+    background-color: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+/* ── État vide ── */
+.items-empty {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: #6b7280;
+}
+
+.items-empty svg {
+    width: 56px;
+    height: 56px;
+    color: #d1d5db;
+    margin-bottom: 1rem;
+}
+
+.items-empty p {
+    font-size: 1rem;
+    margin: 0 0 0.75rem;
+}
+
+.items-empty a {
+    color: #5b4fcf;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.items-empty a:hover {
+    text-decoration: underline;
+}
+
+/* ── Grille de cartes ── */
+.items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+}
+
+/* ── Carte article ── */
+.item-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.item-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.item-card--sold {
+    opacity: 0.65;
+}
+
+/* Image */
+.item-card__image {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: #f3f4f6;
+    overflow: hidden;
+}
+
+.item-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-card__image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-card__image-placeholder svg {
+    width: 40px;
+    height: 40px;
+    color: #d1d5db;
+}
+
+/* Badge état / vendu */
+.item-card__badge {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #5b4fcf;
+    border-radius: 20px;
+}
+
+.item-card__badge--sold {
+    background-color: #ef4444;
+}
+
+/* Corps */
+.item-card__body {
+    padding: 0.875rem 1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+}
+
+.item-card__category {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9ca3af;
+    margin: 0;
+}
+
+.item-card__name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-card__price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #5b4fcf;
+    margin: 0.25rem 0 auto;
+}
+
+.item-card__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.item-card__owner {
+    font-weight: 500;
+    color: #6b7280;
+}
+
+/* ────────────────────────────────────────────
+   PAGE FORMULAIRE — new / edit
+──────────────────────────────────────────── */
+
+.item-form-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background-color: #f4f4f8;
+    padding: 2.5rem 1rem;
+}
+
+.item-form-container {
+    width: 100%;
+    max-width: 680px;
+}
+
+.item-form-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem 2rem;
+}
+
+/* En-tête du formulaire */
+.item-form-header {
+    margin-bottom: 2rem;
+}
+
+.item-form-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    transition: color 0.15s;
+}
+
+.item-form-back:hover {
+    color: #5b4fcf;
+}
+
+.item-form-back svg {
+    width: 14px;
+    height: 14px;
+}
+
+.item-form-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    letter-spacing: -0.4px;
+    margin: 0 0 0.25rem;
+}
+
+.item-form-header p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Formulaire */
+.item-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Ligne à deux colonnes */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-group--full {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+/* Inputs & selects générés par Symfony */
+.item-form input[type="text"],
+.item-form input[type="number"],
+.item-form select,
+.item-form textarea {
+    width: 100%;
+    padding: 0.6rem 0.875rem;
+    font-size: 0.95rem;
+    color: #111827;
+    background: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    font-family: inherit;
+    margin: 0;
+}
+
+.item-form select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.875rem center;
+    padding-right: 2.25rem;
+    cursor: pointer;
+}
+
+.item-form textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+}
+
+.item-form input:focus,
+.item-form select:focus,
+.item-form textarea:focus {
+    border-color: #7c6fe0;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(124, 111, 224, 0.15);
+}
+
+.item-form input::placeholder,
+.item-form textarea::placeholder {
+    color: #9ca3af;
+}
+
+/* Wrap du MoneyType (input + symbole €) */
+.input-money-wrap {
+    position: relative;
+}
+
+/* Erreurs Symfony */
+.item-form ul,
+.item-form ul li {
+    font-size: 0.8rem;
+    color: #b91c1c;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Bouton soumettre */
+.btn-item-submit {
+    margin-top: 0.5rem;
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background-color: #5b4fcf;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-item-submit:hover {
+    background-color: #4a3fb8;
+}
+
+.btn-item-submit:active {
+    background-color: #3d33a0;
+    transform: scale(0.99);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .item-form-card {
+        padding: 2rem 1.25rem;
+        border-radius: 12px;
+    }
+
+    .items-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    }
+
+    .search-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-bar__select,
+    .search-bar__btn {
+        width: 100%;
+    }
+}

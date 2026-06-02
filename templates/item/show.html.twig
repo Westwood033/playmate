@@ -161,6 +161,9 @@
                             </svg>
                             Contacter le vendeur
                         </a>
+                        <a href="{{ path('transaction_new', {id: item.id}) }}" class="btn-contact">
+                            Acheter
+                        </a>
                     {% endif %}
 
                     {# Actions propriétaire / admin #}

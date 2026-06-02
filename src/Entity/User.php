@@ -74,6 +74,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Transaction::class, mappedBy: 'seller', orphanRemoval: true)]
     private Collection $transactionsSold;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $address = null;
+
     public function __construct()
     {
         $this->roles = ['ROLE_USER'];
@@ -246,7 +249,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeItem(Item $item): static {
+    public function removeItem(Item $item): static
+    {
         if ($this->items->removeElement($item)) {
             if ($item->getOwner() === $this) {
                 $item->setOwner(null);
@@ -292,5 +296,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getTransactionsSold(): Collection
     {
         return $this->transactionsSold;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
     }
 }

@@ -2,10 +2,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/item.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/transaction.css') }}">
 {% endblock %}
 
-{% block title %}{{ editing is defined and editing ? 'blablabla' : 'bebleblze' }} — Playmate{% endblock %}
+{% block title %}{{ editing is defined and editing ? 'Modifier une transaction' : 'Créer une transaction' }} — Playmate{% endblock %}
 
 {% block body %}
 <div class="transaction-form-page">
@@ -14,15 +14,11 @@
         <div class="transaction-form-card">
 
             <div class="transaction-form-header">
-                <a href="{{ path('item_index') }}" class="transaction-form-back">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M19 12H5M12 5l-7 7 7 7"/>
-                    </svg>
-                    Retour aux articles
-                </a>
-                <h1>{{ editing is defined and editing ? 'Modifier l\'article' : 'Publier un article' }}</h1>
-                <p>{{ editing is defined and editing ? 'Mettez à jour les informations de votre annonce.' : 'Remplissez les informations pour mettre en vente votre article.' }}</p>
+                <h1>{{ editing is defined and editing ? 'Modifier la transaction' : 'Créer une transaction' }}</h1>
+                <p>{{ 'Remplissez les informations pour votre transaction.' }}</p>
             </div>
+
+            <h1 class="show-info__title">{{ item.name }} - État : {{ item.condition }} - {{ item.price }}€</h1>
 
             {% for msg in app.flashes('success') %}
                 <div class="alert alert-success">{{ msg }}</div>
@@ -30,29 +26,28 @@
 
             {{ form_start(form, {attr: {class: 'transaction-form', novalidate: 'novalidate'}}) }}
 
-                <div class="form-row">
+                <div class="form-column">
+                    <div id="address-container" class="form-group">
+                        {{ form_label(form.address) }}
+                        {{ form_widget(form.address) }}
+                        {{ form_errors(form.address) }}
+                    </div>
+
                     <div class="form-group">
+                        {{ form_label(form.sameAddress) }}
+                        {{ form_widget(form.sameAddress) }}
+                        {{ form_errors(form.sameAddress) }}
+                    </div>
+                    <div id="billing-address-container" class="form-group">
                         {{ form_label(form.billingAddress) }}
                         {{ form_widget(form.billingAddress) }}
                         {{ form_errors(form.billingAddress) }}
                     </div>
 
-                    <div class="form-group">
-                        {{ form_label(form.sameAddress) }}
-                        {{ form_errors(form.sameAddress) }}
-                    </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        {{ form_label(form.category) }}
-                        {{ form_widget(form.category) }}
-                        {{ form_errors(form.category) }}
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-item-submit">
-                    {{ editing is defined and editing ? 'Enregistrer les modifications' : 'Publier l\'article' }}
+                <button type="submit" class="btn-transaction-submit">
+                    {{ editing is defined and editing ? 'Modifier la transaction' : 'Créer la transaction' }}
                 </button>
 
             {{ form_end(form) }}
@@ -61,4 +56,27 @@
     </div>
 
 </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sameAddressCheckbox = document.getElementById('{{ form.sameAddress.vars.id }}');
+            const billingAddressContainer = document.getElementById('billing-address-container');
+            const addressContainer = document.getElementById('address-container');
+
+            function toggleBillingAddress() {
+                billingAddressContainer.style.display = sameAddressCheckbox.checked ? 'none' : 'block';
+                const billingAddressInput = billingAddressContainer.querySelector('input, textarea, select');
+                const addressInput = addressContainer.querySelector('input, textarea, select');
+                billingAddressInput.value = sameAddressCheckbox.checked ? addressInput.value : "";
+            }
+
+            sameAddressCheckbox.addEventListener('change', toggleBillingAddress);
+
+            // Initial state
+            toggleBillingAddress();
+        });
+    </script>
 {% endblock %}

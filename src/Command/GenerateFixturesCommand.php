@@ -55,7 +55,8 @@ class GenerateFixturesCommand extends Command
         $io->title('Génération des fixtures');
         $io->text(sprintf(
             'Création de <info>%d utilisateur(s)</info> et <info>%d article(s)</info>…',
-            $nbUsers, $nbItems
+            $nbUsers,
+            $nbItems
         ));
 
         // ── Utilisateurs ─────────────────────────────────────────────────────
@@ -69,6 +70,7 @@ class GenerateFixturesCommand extends Command
             $user->setLastname($this->randomLastname());
             $user->setPassword($this->hasher->hashPassword($user, $password));
             $user->setIsVerified(true);
+            $user->setAddress($this->randomAddress());
 
             // ~20 % d'admins
             if ($i === 1 || random_int(1, 5) === 1) {
@@ -138,24 +140,77 @@ class GenerateFixturesCommand extends Command
 
     private function randomFirstname(): string
     {
-        $names = ['Alice', 'Bob', 'Clara', 'David', 'Emma', 'Félix', 'Gabriel', 'Hélène',
-            'Inès', 'Jules', 'Karim', 'Laura', 'Marc', 'Nina', 'Oscar', 'Paula'];
+        $names = [
+            'Alice',
+            'Bob',
+            'Clara',
+            'David',
+            'Emma',
+            'Félix',
+            'Gabriel',
+            'Hélène',
+            'Inès',
+            'Jules',
+            'Karim',
+            'Laura',
+            'Marc',
+            'Nina',
+            'Oscar',
+            'Paula'
+        ];
         return $names[array_rand($names)];
     }
 
     private function randomLastname(): string
     {
-        $names = ['Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit',
-            'Durand', 'Leroy', 'Moreau', 'Simon', 'Laurent', 'Lefebvre', 'Michel'];
+        $names = [
+            'Martin',
+            'Bernard',
+            'Dubois',
+            'Thomas',
+            'Robert',
+            'Richard',
+            'Petit',
+            'Durand',
+            'Leroy',
+            'Moreau',
+            'Simon',
+            'Laurent',
+            'Lefebvre',
+            'Michel'
+        ];
         return $names[array_rand($names)];
     }
 
     private function randomItemName(): string
     {
-        $prefixes = ['Dracaufeu', 'Pikachu', 'Mewtwo', 'Lugia', 'Rayquaza', 'Arceus',
-            'Tortank', 'Florizarre', 'Ronflex', 'Évoli', 'Artikodin', 'Electhor'];
-        $suffixes = ['EX', 'GX', 'V', 'VMAX', 'VSTAR', 'Full Art', 'Rainbow Rare',
-            'Holo', 'Reverse Holo', 'Secret Rare', 'Gold'];
+        $prefixes = [
+            'Dracaufeu',
+            'Pikachu',
+            'Mewtwo',
+            'Lugia',
+            'Rayquaza',
+            'Arceus',
+            'Tortank',
+            'Florizarre',
+            'Ronflex',
+            'Évoli',
+            'Artikodin',
+            'Electhor'
+        ];
+        $suffixes = [
+            'EX',
+            'GX',
+            'V',
+            'VMAX',
+            'VSTAR',
+            'Full Art',
+            'Rainbow Rare',
+            'Holo',
+            'Reverse Holo',
+            'Secret Rare',
+            'Gold'
+        ];
         $types    = ['Carte', 'Booster', 'Display', 'Coffret', 'Promo'];
 
         $type = $types[array_rand($types)];
@@ -164,8 +219,15 @@ class GenerateFixturesCommand extends Command
             return sprintf('%s %s', $prefixes[array_rand($prefixes)], $suffixes[array_rand($suffixes)]);
         }
 
-        $sets = ['Écarlate et Violet', 'Évolutions Prismatiques', 'Obsidian Flames',
-            'Paldea Evolved', 'Crown Zenith', 'Silver Tempest', 'Lost Origin'];
+        $sets = [
+            'Écarlate et Violet',
+            'Évolutions Prismatiques',
+            'Obsidian Flames',
+            'Paldea Evolved',
+            'Crown Zenith',
+            'Silver Tempest',
+            'Lost Origin'
+        ];
 
         return sprintf('%s %s', $type, $sets[array_rand($sets)]);
     }
@@ -194,5 +256,16 @@ class GenerateFixturesCommand extends Command
         ];
 
         return $intros[array_rand($intros)] . $extras[array_rand($extras)];
+    }
+
+    private function randomAddress(): string
+    {
+        $addresses = [
+            "3 rue du Soleil, 55600 Lons",
+            "782 Avenue de la Libération, 64230 Lescar",
+            "1 Place Royale, 44000 Nantes",
+            "6 rue Wilfrid Voynich, 14141 Prage"
+        ];
+        return $addresses[array_rand($addresses)];
     }
 }

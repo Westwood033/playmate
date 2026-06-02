@@ -24,8 +24,14 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?User $buyer = null;
 
-    #[ORM\Column(length: 1027)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $billingAddress = null;
+
+    #[ORM\Column]
+    private ?bool $sameAddress = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $address = null;
 
     public function getId(): ?int
     {
@@ -76,6 +82,30 @@ class Transaction
     public function setBillingAddress(string $billingAddress): static
     {
         $this->billingAddress = $billingAddress;
+
+        return $this;
+    }
+
+    public function isSameAddress(): ?bool
+    {
+        return $this->sameAddress;
+    }
+
+    public function setSameAddress(bool $sameAddress): static
+    {
+        $this->sameAddress = $sameAddress;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): static
+    {
+        $this->address = $address;
 
         return $this;
     }
