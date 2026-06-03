@@ -72,6 +72,11 @@
 							<option value="1" {% if filters.sold == '1' %} selected {% endif %}>Vendus</option>
 						</select>
 
+						<label class="tournaments-search__check">
+					<input type="checkbox" name="owner" value="1" {% if filters.owner %}checked{% endif %}>
+					<span>Mes items</span>
+						</label>
+
 						<button type="submit" class="search-bar__btn">Filtrer</button>
 					</div>
 					{% if filters.q or filters.category or filters.condition or filters.sold != '' %}

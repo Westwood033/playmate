@@ -174,12 +174,14 @@
 										Tournoi complet
 									</button>
 								{% else %}
+									{% if 'ROLE_SHOP' not in app.user.roles %}
 									<form method="post" action="{{ path('app_tournament_user_add', {id: tournament.id, userId: app.user.id}) }}">
 										<input type="hidden" name="_token" value="{{ csrf_token('join' ~ tournament.id) }}">
 										<button type="submit" class="btn-tournament-joined btn-secondary">
 											Rejoindre le tournoi
 										</button>
 									</form>
+									{% endif %}
 								{% endif %}
 							</div>
 						{% endif %}

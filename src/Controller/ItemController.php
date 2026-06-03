@@ -31,6 +31,7 @@ class ItemController extends AbstractController
             'category' => $request->query->get('category', ''),
             'condition' => $request->query->get('condition', ''),
             'sold' => $request->query->get('sold', '0'),
+            'owner' => $request->query->get('owner') !== null && $this->getUser() ? $this->getUser() : null,
         ];
 
         return $this->render('item/index.html.twig', [
