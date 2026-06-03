@@ -25,12 +25,8 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?User $buyer = null;
 
-<<<<<<< HEAD
-    #[ORM\ManyToOne(inversedBy: 'transactionsSold')]
-=======
     #[ORM\ManyToOne(inversedBy: 'transactions')]
     #[ORM\JoinColumn(nullable: false)]
->>>>>>> historique_achats
     private ?User $seller = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -146,14 +142,14 @@ class Transaction
         return $this;
     }
 
-    public function getSeller(): ?User
+    public function getAddress(): ?string
     {
-        return $this->seller;
+        return $this->buyerAddress;
     }
 
-    public function setSeller(?User $seller): static
+    public function setAddress(string $address): static
     {
-        $this->seller = $seller;
+        $this->buyerAddress = $address;
 
         return $this;
     }

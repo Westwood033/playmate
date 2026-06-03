@@ -29,23 +29,19 @@ final class TransactionController extends AbstractController
 {
     public function __construct(
         private readonly MailerInterface $mailer,
-    )
-    {
-    }
+    ) {}
 
     /**
      * @throws ApiErrorException
      * @throws TransportExceptionInterface
      */
-
-    #[Route('/new/{id}', name: 'transaction_new', methods: ['GET', 'POST'])]
+    #[Route('/new/{id}', name: 'transaction_new', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
     public function new(
         Request                $request,
         EntityManagerInterface $em,
         Item                   $item
-    ): Response
-    {
+    ): Response {
         /** @var User $buyer */
         $buyer = $this->getUser();
         $seller = $item->getOwner();
@@ -79,6 +75,7 @@ final class TransactionController extends AbstractController
             }
 
             $this->handleSale($transaction, $item, $buyer, $seller, $price, $addresses);
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User */
@@ -150,8 +147,7 @@ final class TransactionController extends AbstractController
     public function success(
         Request                $request,
         EntityManagerInterface $em
-    ): Response
-    {
+    ): Response {
         $item = $em->find(Item::class, $request->query->get('itemId'));
         $buyer = $em->find(User::class, $request->query->get('buyerId'));
 
@@ -222,8 +218,7 @@ final class TransactionController extends AbstractController
         User        $seller,
         int         $price,
         array       $addresses
-    ): void
-    {
+    ): void {
         $buyer->removeFromWallet($price);
         $seller->addToWallet($price);
 
@@ -248,8 +243,7 @@ final class TransactionController extends AbstractController
         string $itemPrice,
         string $sellerName,
         string $address
-    ): void
-    {
+    ): void {
         $email = (new TemplatedEmail())
             ->from('noreply@playmate.fr')
             ->to($buyer->getEmail())
