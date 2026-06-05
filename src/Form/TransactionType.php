@@ -3,11 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Transaction;
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class TransactionType extends AbstractType
 {
@@ -18,7 +20,7 @@ class TransactionType extends AbstractType
                 'label' => 'Adresse de facturation',
                 'attr' => ['placeholder' => '2 rue du Lila, 12345 Moute, France'],
             ])
-            ->add('buyerAddress', TextType::class, [
+            ->add('address', TextType::class, [
                 'label' => 'Adresse de livraison',
                 'attr' => ['placeholder' => '2 rue du Lila, 12345 Moute, France'],
             ])

@@ -25,8 +25,7 @@ class Transaction
     #[ORM\JoinColumn(nullable: false)]
     private ?User $buyer = null;
 
-    #[ORM\ManyToOne(inversedBy: 'transactions')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(inversedBy: 'transactionsSold')]
     private ?User $seller = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -36,10 +35,7 @@ class Transaction
     private bool $sameAddress = false;
 
     #[ORM\Column(length: 255)]
-    private ?string $buyerAddress = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $sellerAddress = null;
+    private ?string $address = null;
 
     public function getId(): ?int
     {
@@ -82,18 +78,6 @@ class Transaction
         return $this;
     }
 
-    public function getSeller(): ?User
-    {
-        return $this->seller;
-    }
-
-    public function setSeller(?User $seller): static
-    {
-        $this->seller = $seller;
-
-        return $this;
-    }
-
     public function getBillingAddress(): ?string
     {
         return $this->billingAddress;
@@ -118,38 +102,26 @@ class Transaction
         return $this;
     }
 
-    public function getBuyerAddress(): ?string
-    {
-        return $this->buyerAddress;
-    }
-
-    public function setBuyerAddress(string $address): static
-    {
-        $this->buyerAddress = $address;
-
-        return $this;
-    }
-
-    public function getSellerAddress(): ?string
-    {
-        return $this->sellerAddress;
-    }
-
-    public function setSellerAddress(string $address): static
-    {
-        $this->sellerAddress = $address;
-
-        return $this;
-    }
-
     public function getAddress(): ?string
     {
-        return $this->buyerAddress;
+        return $this->address;
     }
 
     public function setAddress(string $address): static
     {
-        $this->buyerAddress = $address;
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getSeller(): ?User
+    {
+        return $this->seller;
+    }
+
+    public function setSeller(?User $seller): static
+    {
+        $this->seller = $seller;
 
         return $this;
     }
