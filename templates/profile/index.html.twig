@@ -118,7 +118,12 @@
 							<button type="submit" class="btn btn-secondary">
 								Enregistrer les modifications
 							</button>
+
+							<a href="{{ path('transaction_history', { id: user.id }) }}" class="btn btn-outline-secondary">
+								Voir l'historique des achats
+							</a>
 						</div>
+
 						{{ form_end(form) }}
 					</section>
 				</div>
